@@ -29,6 +29,9 @@ const usuarioSchema = new Schema ({
     ciudad: {
         type: String
     },
+    foto: {
+        type: String
+    },
     esAdministrador: {
         type: Boolean,
         default: false
