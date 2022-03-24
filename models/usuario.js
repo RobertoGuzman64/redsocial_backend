@@ -11,7 +11,7 @@ const usuarioSchema = new Schema ({
         type: String
     },
     edad: {
-        type: Data,
+        type: Date,
         required: true
     },
     correo: {
@@ -57,7 +57,7 @@ const toJSONConfig = {
     }
 }
 
-userSchema.set('toJSON', toJSONConfig);
+usuarioSchema.set('toJSON', toJSONConfig);
 
 const Usuario = mongoose.model("Usuario", usuarioSchema);
 module.exports = Usuario;
