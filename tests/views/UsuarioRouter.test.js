@@ -9,20 +9,20 @@ const cluster = process.env.DB_CLUSTER;
 
 const url = `mongodb+srv://${usuario}:${clave}@${cluster}.lfcn0.mongodb.net/${database}?retryWrites=true&w=majority`;
 
-beforeEach((done) => {
+beforeAll((done) => {
     mongoose.connect(url, {
         useNewUrlPArser: true,
         useUnifiedTopology: true,
     }, () => done());
 });
 
-afterEach((done) => {
+afterAll((done) => {
     mongoose.connection.db.dropDatabase(() => {
         mongoose.connection.close(() => done())
     });
 });
 
-describe('POST endpoint /', () => {
+describe('POST endpoint "/"', () => {
     /*
      * Tenemos 15 campos (contando __v y _id) pero el retorno tiene 14 porque la clave no viene la clave
         {
@@ -42,7 +42,7 @@ describe('POST endpoint /', () => {
             "likes": Array [],
         }
     */
-    test("CREA usuario y retorna 201", async () => {
+    test("CREA usuario con todos los campos rellenados y retorna 201", async () => {
         let data = {
             nombre: 'Test',
             apellidos: 'Testing',
@@ -110,29 +110,27 @@ describe('POST endpoint /', () => {
 
         expect(resNombre.body).toMatchObject({ "message": "Usuario validation failed: nombre: Path `nombre` is required." })
         expect(resNombre.statusCode).toEqual(400);
-        
+
         const resEdad = await request(app).post('/usuarios').send(datosSinEdad);
 
         expect(resEdad.body).toMatchObject({ "message": "Usuario validation failed: edad: Path `edad` is required." })
         expect(resEdad.statusCode).toEqual(400);
+
         const resCorreo = await request(app).post('/usuarios').send(datosSinCorreo);
 
         expect(resCorreo.body).toMatchObject({ "message": "Usuario validation failed: correo: Path `correo` is required." })
         expect(resCorreo.statusCode).toEqual(400);
     });
 
-    // test("NO crea usuario porque ya existe un usuario con ese correo y retorna 400", async () => {
-    //     let data = {
-    //         nombre: 'Test',
-    //         edad: '2002-08-17T07:32:37.341Z',
-    //         correo: 'test@mail.com',
-    //         clave: '1234'
-    //     }
-    //     await request(app).post('/usuarios').send(data);
-    //     const res = await request(app).post('/usuarios').send(data);
-    ////TODO: Hacer con que el banco salve los 2 usuarios y mostre un error al inves de salvar, borrar la base y salvar otra vez.
-    //     expect(res.body).toMatchObject({ "message": "E11000 duplicate key error collection: testing.usuarios index: correo_1 dup key: { correo: \"test@test.com\" }" })
-    //     expect(res.statusCode).toEqual(500); // TODO: Hacer con que retorne 400
-    // });
-}
-)
+    test("NO crea usuario porque ya existe un usuario con ese correo y retorna 400", async () => {
+        let data = {
+            nombre: 'Test',
+            edad: '2002-08-17T07:32:37.341Z',
+            correo: 'test@mail.com',
+            clave: '1234'
+        }
+        const res = await request(app).post('/usuarios').send(data);
+        expect(res.body).toMatchObject({ "message": "E11000 duplicate key error collection: testing.usuarios index: correo_1 dup key: { correo: \"test@mail.com\" }" })
+        expect(res.statusCode).toEqual(400);
+    });
+})
