@@ -24,44 +24,63 @@ afterEach((done) => {
 
 describe('POST endpoint /', () => {
     /*
+     * Tenemos 15 campos (contando __v y _id) pero el retorno tiene 14 porque la clave no viene la clave
         {
-            nombre: 'Luigi',
-            edad: '2022-03-25T07:24:06.079Z',
-            correo: 'ligi@python.com',
-            esAdministrador: false,
-            siguiendo: [],
-            seguidores: [],
-            publicaciones: [],
-            _id: '623d6e16177deb21bcd116ba',
-            __v: 0
+            "__v": 0
+            "_id": "623dc93c9dd1ac34798780f6",
+            "nombre": "Test",
+            "apellidos": "Testing",
+            "edad": "2002-08-17T07:32:37.341Z",
+            "correo": "test@mail.com",
+            "telefono": "+34123456789",
+            "ciudad": "here",
+            "foto": "http://blank.page",
+            "esAdministrador": false,
+            "siguiendo": Array [],
+            "seguidores": Array [],
+            "publicaciones": Array [],
+            "likes": Array [],
         }
     */
-    test("Crea usuario y retorna 201", async () => {
+    test("CREA usuario y retorna 201", async () => {
         let data = {
-            nombre: 'test',
+            nombre: 'Test',
+            apellidos: 'Testing',
             edad: '2002-08-17T07:32:37.341Z',
             correo: 'test@mail.com',
-            clave: '1234'
+            clave: '1234',
+            telefono: '+34123456789',
+            ciudad: 'here',
+            foto: 'http://blank.page',
         }
         const res = await request(app)
             .post('/usuarios')
             .send(data);
 
-        expect(res.body).toHaveProperty('nombre', data.nombre);
-        expect(res.body).toHaveProperty('edad', data.edad);
-        expect(res.body).toHaveProperty('correo', data.correo);
-        expect(res.body).toHaveProperty('esAdministrador', false);
-        expect(res.body).toHaveProperty('siguiendo', []);
-        expect(res.body).toHaveProperty('seguidores', []);
-        expect(res.body).toHaveProperty('publicaciones', []);
+        expect(res.body).toHaveProperty('[]', {
+            "__v": res.body.__v,
+            "_id": res.body._id,
+            nombre: data.nombre,
+            apellidos: data.apellidos,
+            edad: data.edad,
+            correo: data.correo,
+            telefono: data.telefono,
+            ciudad: data.ciudad,
+            foto: data.foto,
+            esAdministrador: false,
+            siguiendo: [],
+            seguidores: [],
+            publicaciones: [],
+            likes: [],
+        });
         expect(res.statusCode).toEqual(201);
     });
 
     test("NO crea usuario porque no has pasado la contraseña y retorna 400", async () => {
         let data = {
-            nombre: 'Luigi',
+            nombre: 'Test',
             edad: '2002-08-17T07:32:37.341Z',
-            correo: 'luigi@python.com',
+            correo: 'test@mail.com',
         }
         const res = await request(app)
             .post('/usuarios')
@@ -71,30 +90,47 @@ describe('POST endpoint /', () => {
         expect(res.statusCode).toEqual(400);
     });
 
-    test("NO crea usuario porque no has pasado el nombre y retorna 400", async () => {
-        let data = {
+    test("NO crea usuario porque no has pasado o el nombre, o el correo o la edad y retorna 400", async () => {
+        let datosSinNombre = {
             edad: '2002-08-17T07:32:37.341Z',
-            correo: 'luigi@python.com',
+            correo: 'test@mail.com',
             clave: '1234'
         }
-        const res = await request(app)
-            .post('/usuarios')
-            .send(data);
+        let datosSinEdad = {
+            nombre: 'Test',
+            correo: 'test@mail.com',
+            clave: '1234'
+        }
+        let datosSinCorreo = {
+            nombre: 'Test',
+            edad: '2002-08-17T07:32:37.341Z',
+            clave: '1234'
+        }
+        const resNombre = await request(app).post('/usuarios').send(datosSinNombre);
 
-        expect(res.body).toMatchObject({ "message": "Usuario validation failed: nombre: Path `nombre` is required." })
-        expect(res.statusCode).toEqual(400);
+        expect(resNombre.body).toMatchObject({ "message": "Usuario validation failed: nombre: Path `nombre` is required." })
+        expect(resNombre.statusCode).toEqual(400);
+        
+        const resEdad = await request(app).post('/usuarios').send(datosSinEdad);
+
+        expect(resEdad.body).toMatchObject({ "message": "Usuario validation failed: edad: Path `edad` is required." })
+        expect(resEdad.statusCode).toEqual(400);
+        const resCorreo = await request(app).post('/usuarios').send(datosSinCorreo);
+
+        expect(resCorreo.body).toMatchObject({ "message": "Usuario validation failed: correo: Path `correo` is required." })
+        expect(resCorreo.statusCode).toEqual(400);
     });
 
     // test("NO crea usuario porque ya existe un usuario con ese correo y retorna 400", async () => {
     //     let data = {
-    //         nombre: 'Luigi',
+    //         nombre: 'Test',
     //         edad: '2002-08-17T07:32:37.341Z',
-    //         correo: 'test@test.com',
+    //         correo: 'test@mail.com',
     //         clave: '1234'
     //     }
     //     await request(app).post('/usuarios').send(data);
-    //     const res = await request(app).post('/usuarios').send(data); 
-    // TODO: Hacer con que el banco salve los 2 usuarios y mostre un error al inves de salvar, borrar la base y salvar otra vez.
+    //     const res = await request(app).post('/usuarios').send(data);
+    ////TODO: Hacer con que el banco salve los 2 usuarios y mostre un error al inves de salvar, borrar la base y salvar otra vez.
     //     expect(res.body).toMatchObject({ "message": "E11000 duplicate key error collection: testing.usuarios index: correo_1 dup key: { correo: \"test@test.com\" }" })
     //     expect(res.statusCode).toEqual(500); // TODO: Hacer con que retorne 400
     // });
