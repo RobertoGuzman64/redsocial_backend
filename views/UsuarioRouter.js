@@ -34,7 +34,7 @@ router.post("/", async(req, res) => {
 
 // POST
 // Endpoint de Login de Usuario.
-// http://localhost:5500/usuario/login
+// http://localhost:5500/usuarios/login
 
 router.post("/login", async(req, res) => {
     try {
@@ -47,10 +47,20 @@ router.post("/login", async(req, res) => {
     }
 });
 
-
+// PUT
 // Endpoint de Modificar el perfil por ID.
+// http://localhost:5500/usuarios/:id
 
-
+router.put("/:id", async(req, res) =>{
+    try {
+        const body = req.body;
+        res.status(200).json(await UsuarioController.perfilUsuario(body));
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+})
 
 
 module.exports = router;
