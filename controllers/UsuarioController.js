@@ -5,17 +5,20 @@ const jwt = require('jsonwebtoken');
 
 // Clase Usuario donde contiene todas las funciones.
 
-class Usuario{
+class Usuario {
     constructor(){
     }
-    async crearUsuario(body) {
-        body.clave = await bcrypt.hashSync( body.clave, Number.parseInt(authConfig.rondas));
+
+    crearUsuario(body) {
+        body.clave = bcrypt.hashSync(body.clave, Number.parseInt(authConfig.rondas));
         return UsuarioModel.create(body);
     }
-    async traerUsuarios(){
+
+    traerUsuarios(){
         return UsuarioModel.find();
     }
-    async loginUsuario(body) {
+
+    loginUsuario(body) {
         let correo = body.correo;
         let clave = body.clave;
         

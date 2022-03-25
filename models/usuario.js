@@ -45,15 +45,15 @@ const usuarioSchema = new Schema ({
     publicaciones: {
         type: Array
     },
-    likes: {
+    likes: { // Likes que el usuario ha añadido a otros posts
         type: Array
     },
 })
 
 const toJSONConfig = {
     transform: (doc,ret,opt) => {//transform es un metodo de mongoose
-        delete ret['clave']//ret es un metodo encripta la password para enviarla con mas seguridad
-        return ret
+        delete ret['clave']// borra la clave del retorno cuando llamamos los datos del usuario
+        return ret//ret es un metodo encripta la password para enviarla con mas seguridad
     }
 }
 
