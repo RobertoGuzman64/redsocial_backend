@@ -13,6 +13,12 @@
   },
   "author": "Luigi Minardi, Callum Gordon, Roberto Guzmán, Teresa Carrasco",
   "license": "MIT",
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
   "dependencies": {
     "axios": "0.26.1",
     "bcrypt": "5.0.1",
@@ -23,6 +29,7 @@
     "mongoose": "6.2.7"
   },
   "devDependencies": {
+    "@types/jest": "^27.4.1",
     "jest": "27.5.1",
     "nodemon": "2.0.15",
     "supertest": "^6.2.2"
