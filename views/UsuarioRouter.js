@@ -36,10 +36,11 @@ router.post("/", async(req, res) => {
 // Endpoint de Login de Usuario.
 // http://localhost:5500/usuarios/login
 
-router.post("/login", async(req, res) => {
+router.post("/login", async (req, res) => {
     try {
         const body = req.body;
-        res.status(200).json(await UsuarioController.loginUsuario(body));
+        let respuesta = await UsuarioController.loginUsuario(body);
+        res.status(respuesta.status).json(respuesta.datos)
     } catch (error) {
         return res.status(500).json({
             message: error.message

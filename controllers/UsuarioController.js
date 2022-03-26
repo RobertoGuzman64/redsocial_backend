@@ -18,36 +18,47 @@ class Usuario {
         return UsuarioModel.find();
     }
 
-    loginUsuario(body) {
+    async loginUsuario(body) {
         let correo = body.correo;
         let clave = body.clave;
 
-        UsuarioModel.findOne({ where: { correo: correo } }).then(usuarioEncontrado => {
+        const usuarioLogueado = await UsuarioModel.findOne({ correo: correo }).then(usuarioEncontrado => {
             if (!usuarioEncontrado) {
-                return "Usuario o contraseña inválido"
+                return { // usuario no existe
+                    status: 401,
+                    datos: {
+                        msg: "Usuario o contraseña inválido"
+                    }
+                }
             } else {
-                //el usuario existe, por lo tanto, vamos a comprobar
-                //si el password es correcto
-                console.log('usuarioEncontrado.clave', usuarioEncontrado.clave)
-                console.log('Comprobacion', bcrypt.hashSync(clave, Number.parseInt(authConfig.rondas)))
+                //comprova clave
                 if (bcrypt.compareSync(clave, usuarioEncontrado.clave)) {
                     let token = jwt.sign({ usuario: usuarioEncontrado }, authConfig.complemento, {
                         expiresIn: authConfig.expiracion
                     });
-                    return {
-                        usuario: usuarioEncontrado,
-                        token: token
+                    return { //clave es correcta
+                        status: 200,
+                        datos: {
+                            usuario: usuarioEncontrado,
+                            token
+                        }
                     }
                 } else {
-                    return { msg: "Usuario o contraseña inválidos" };
+                    return { // clave no es correcta
+                        status: 401,
+                        datos: {
+                            msg: "Usuario o contraseña inválido"
+                        }
+                    };
                 }
             };
         });
+        return usuarioLogueado;
     }
 
     perfilUsuario(body) {
         let datos = body
-        return(
+        return (
             UsuarioModel.updateOne({ where: { _id: datos._id } }).then(actualizado => {
                 console.log("Electrico", actualizado)
                 res.send(actualizado);
