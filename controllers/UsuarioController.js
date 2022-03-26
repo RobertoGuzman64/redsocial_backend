@@ -61,21 +61,46 @@ class Usuario {
         return usuarioLogueado;
     }
 
-    perfilUsuario(body) { // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
-        let datos = body
-        return (
-            UsuarioModel.updateOne({ where: { _id: datos._id } }).then(actualizado => {
-                console.log("Electrico", actualizado)
-                res.send(actualizado);
+    async perfilUsuario(id, body) { // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
+        let clave = false;
+        if (Object.entries(body).length === 0) {
+            return {
+                status: 422,
+                datos: {
+                    error: 'Para cambiar los datos del usuario necesita pasar algun dato para ser cambiado.',
+                }
+            }
+        } else {
+            if (body.clave) {
+                delete body.clave;
+                clave = true;
+            }
+
+            let usuarioCambiado = await UsuarioModel.findByIdAndUpdate(id, body, { new: true }).then(actualizado => {
+                if (clave) {
+                    return {
+                        status: 200,
+                        datos: {
+                            error: 'Para cambiar la clave necesita de acceder el endpoint de cambiar clave.',
+                            usuario: actualizado
+                        }
+                    }
+                } else {
+                    return {
+                        status: 200,
+                        datos: {
+                            usuario: actualizado
+                        }
+                    }
+                }
             })
-        )
+            return usuarioCambiado;
+        }
     }
 
-    async borrarUsuario(){ // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
-        return UsuarioModel.findByIdAndRemove( { _id: req._id } );
+    async borrarUsuario() { // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
+        return UsuarioModel.findByIdAndRemove({ _id: req._id });
     }
-
-
 }
 
 

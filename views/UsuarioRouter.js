@@ -65,14 +65,16 @@ router.post("/login", async (req, res) => {
     }
 });
 
-// PUT
+// PATCH
 // Endpoint de Modificar el perfil por ID.
 // http://localhost:5500/usuarios
 
-router.put("/", async (req, res) => {
+router.patch("/:id", async (req, res) => {
     try {
+        const id = req.params.id;
         const body = req.body;
-        res.status(200).json(await UsuarioController.perfilUsuario(body));
+        let respuesta = await UsuarioController.perfilUsuario(id, body)
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
