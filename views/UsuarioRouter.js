@@ -17,6 +17,23 @@ router.get("/", async (req, res) => {
     }
 });
 
+// GET
+// Edpoint de mostrar un Usuario por ID.
+// http://localhost:5500/usuarios/:id
+
+router.get("/:id", async (req, res) => {
+    try {
+        let id = req.params.id
+        let respuesta = await UsuarioController.traerUsuarioId(id);
+        res.status(respuesta.status).json(respuesta.datos)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
+
 // POST
 // Endpoint de crear un Usuario.
 // http://localhost:5500/usuarios

@@ -18,6 +18,11 @@ class Usuario {
         return UsuarioModel.find();
     }
 
+    async traerUsuarioId(id) {
+        let usuarioEncontrado = await UsuarioModel.findById(id);
+        return { status:200, datos: usuarioEncontrado }
+    }
+
     async loginUsuario(body) {
         let correo = body.correo;
         let clave = body.clave;
