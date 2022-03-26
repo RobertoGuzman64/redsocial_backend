@@ -134,3 +134,79 @@ describe('POST endpoint "/"', () => {
         expect(res.statusCode).toEqual(400);
     });
 })
+
+describe('POST endpoint "/login"', () => {
+    test('LOGUEA el usuario por su correo y retorna 200', async () => {
+        let usuario = {
+            nombre: 'Test',
+            apellidos: 'Testing',
+            edad: '2002-08-17T07:32:37.341Z',
+            correo: 'test@mail.com',
+            clave: '1234',
+            telefono: '+34123456789',
+            ciudad: 'here',
+            foto: 'http://blank.page',
+        }
+        await request(app).post('/usuarios').send(usuario);
+        let data = {
+            correo: 'test@mail.com',
+            clave: '1234'
+        }
+        const res = await request(app)
+            .post('/usuarios/login')
+            .send(data);
+
+        expect(res.body).toHaveProperty('usuario', {
+            "__v": res.body.usuario.__v,
+            "_id": res.body.usuario._id,
+            nombre: usuario.nombre,
+            apellidos: usuario.apellidos,
+            edad: usuario.edad,
+            correo: usuario.correo,
+            telefono: usuario.telefono,
+            ciudad: usuario.ciudad,
+            foto: usuario.foto,
+            esAdministrador: false,
+            siguiendo: [],
+            seguidores: [],
+            publicaciones: [],
+            likes: [],
+        });
+        expect(res.body).toHaveProperty('token')
+        expect(res.statusCode).toEqual(200);
+    })
+
+    test('NO loguea el usuario por la contraseña no estar correcta y retorna 401', async () => {
+        let usuario = {
+            nombre: 'Test',
+            edad: '2002-08-17T07:32:37.341Z',
+            correo: 'test2@mail.com',
+            clave: '1234',
+        }
+        await request(app).post('/usuarios').send(usuario);
+
+        let loginInfo = {
+            correo: 'test2@mail.com',
+            clave: '123'
+        }
+        const res = await request(app)
+            .post('/usuarios/login')
+            .send(loginInfo);
+
+        expect(res.body).toMatchObject({ msg: 'Usuario o contraseña inválido' });  // retorno de "clave no es correcta" del metodo
+        expect(res.statusCode).toEqual(401);
+    })
+    
+    test('NO loguea usuario por el no existir y retorna 401', async () => {
+        let loginInfo = {
+            correo: 'test3@mail.com',
+            clave: '1234'
+        }
+        const res = await request(app)
+            .post('/usuarios/login')
+            .send(loginInfo);
+
+        expect(res.body).toMatchObject({ msg: 'Usuario o contraseña inválido' });  // retorno de "usuario no existe" del metodo
+        expect(res.statusCode).toEqual(401);
+    })
+})
