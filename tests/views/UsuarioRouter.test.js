@@ -196,7 +196,7 @@ describe('POST endpoint "/login"', () => {
         expect(res.body).toMatchObject({ msg: 'Usuario o contraseña inválido' });  // retorno de "clave no es correcta" del metodo
         expect(res.statusCode).toEqual(401);
     })
-    
+
     test('NO loguea usuario por el no existir y retorna 401', async () => {
         let loginInfo = {
             correo: 'test3@mail.com',
@@ -208,5 +208,40 @@ describe('POST endpoint "/login"', () => {
 
         expect(res.body).toMatchObject({ msg: 'Usuario o contraseña inválido' });  // retorno de "usuario no existe" del metodo
         expect(res.statusCode).toEqual(401);
+    })
+})
+
+describe('GET endpoint "/"', () => {
+    test('MOSTRA todos los usuarios en la base de datos y retorna 200', async () => {
+        const res = await request(app).get('/usuarios')
+        expect(res.body).toMatchObject([
+            {
+                "__v": 0,
+                "_id": res.body[0]._id,
+                "apellidos": "Testing",
+                "ciudad": "here",
+                "correo": "test@mail.com",
+                "edad": "2002-08-17T07:32:37.341Z",
+                "esAdministrador": false,
+                "foto": "http://blank.page",
+                "likes": [],
+                "nombre": "Test",
+                "publicaciones": [],
+                "seguidores": [],
+                "siguiendo": [],
+                "telefono": "+34123456789"
+            }, {
+                "__v": 0,
+                "_id": res.body[1]._id,
+                "correo": "test2@mail.com",
+                "edad": "2002-08-17T07:32:37.341Z",
+                "esAdministrador": false,
+                "likes": [],
+                "nombre": "Test",
+                "publicaciones": [],
+                "seguidores": [],
+                "siguiendo": []
+            }])
+        expect(res.statusCode).toEqual(200);
     })
 })
