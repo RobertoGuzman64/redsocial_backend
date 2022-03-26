@@ -56,7 +56,7 @@ class Usuario {
         return usuarioLogueado;
     }
 
-    perfilUsuario(body) {
+    perfilUsuario(body) { // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
         let datos = body
         return (
             UsuarioModel.updateOne({ where: { _id: datos._id } }).then(actualizado => {
@@ -65,6 +65,12 @@ class Usuario {
             })
         )
     }
+
+    async borrarUsuario(){ // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
+        return UsuarioModel.findByIdAndRemove( { _id: req._id } );
+    }
+
+
 }
 
 
