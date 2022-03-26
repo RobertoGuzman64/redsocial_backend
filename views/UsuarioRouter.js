@@ -50,7 +50,7 @@ router.post("/login", async (req, res) => {
 
 // PUT
 // Endpoint de Modificar el perfil por ID.
-// http://localhost:5500/usuarios/:id
+// http://localhost:5500/usuarios
 
 router.put("/", async (req, res) => {
     try {
@@ -65,6 +65,7 @@ router.put("/", async (req, res) => {
 
 // DELETE
 // Endpoint de borrar un Usuario por ID.
+// http://localhost:5500/usuarios
 
 router.delete("/", async (req, res) => {
     try {
