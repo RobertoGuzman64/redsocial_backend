@@ -78,6 +78,22 @@ class Usuario {
             if (body.clave) {
                 delete body.clave;
                 clave = true;
+
+            }
+            if (body._id) {
+                return {
+                    status: 422,
+                    datos: {
+                        error: 'Tu no puedes cambiar el id del usuario'
+                    }
+                };
+            } else if (body.__v) {
+                return {
+                    status: 422,
+                    datos: {
+                        error: 'Tu no puedes cambiar la version del usuario'
+                    }
+                };
             }
 
             let usuarioCambiado = await UsuarioModel.findByIdAndUpdate(id, body, { new: true }).then(actualizado => {
@@ -95,6 +111,13 @@ class Usuario {
                         datos: {
                             usuario: actualizado
                         }
+                    }
+                }
+            }).catch(error => {
+                return {
+                    status: 404,
+                    datos: {
+                        error: error.message
                     }
                 }
             })
