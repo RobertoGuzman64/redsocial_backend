@@ -1,4 +1,4 @@
-const app = require('../../server')
+const app = require('../../server');
 const mongoose = require('mongoose');
 const request = require('supertest');
 
@@ -9,18 +9,36 @@ const cluster = process.env.DB_CLUSTER;
 
 const url = `mongodb+srv://${usuario}:${clave}@${cluster}.lfcn0.mongodb.net/${database}?retryWrites=true&w=majority`;
 
-const URLBase = '/usuarios'
+const URLBase = '/usuarios';
+
+let usuarioBase;
+let resBase;
 
 beforeAll((done) => {
     mongoose.connect(url, {
         useNewUrlPArser: true,
         useUnifiedTopology: true,
-    }, () => done());
+    }, async () => {
+        usuarioBase = {
+            nombre: 'Test',
+            apellidos: 'Testing',
+            edad: '2002-08-17T07:32:37.341Z',
+            correo: 'test@mail.com',
+            clave: '1234',
+            telefono: '+34123456789',
+            ciudad: 'here',
+            foto: 'http://blank.page',
+        };
+        resBase = await request(app)
+            .post(URLBase)
+            .send(usuarioBase);
+        done();
+    });
 });
 
 afterAll((done) => {
     mongoose.connection.db.dropDatabase(() => {
-        mongoose.connection.close(() => done())
+        mongoose.connection.close(() => done());
     });
 });
 
@@ -45,37 +63,24 @@ describe('POST endpoint "/"', () => {
         }
     */
     test("CREA usuario con todos los campos rellenados y retorna 201", async () => {
-        let datos = {
-            nombre: 'Test',
-            apellidos: 'Testing',
-            edad: '2002-08-17T07:32:37.341Z',
-            correo: 'test@mail.com',
-            clave: '1234',
-            telefono: '+34123456789',
-            ciudad: 'here',
-            foto: 'http://blank.page',
-        }
-        const res = await request(app)
-            .post(URLBase)
-            .send(datos);
 
-        expect(res.body).toHaveProperty('[]', {
-            "__v": res.body.__v,
-            "_id": res.body._id,
-            nombre: datos.nombre,
-            apellidos: datos.apellidos,
-            edad: datos.edad,
-            correo: datos.correo,
-            telefono: datos.telefono,
-            ciudad: datos.ciudad,
-            foto: datos.foto,
+        expect(resBase.body).toHaveProperty('[]', {
+            "__v": resBase.body.__v,
+            "_id": resBase.body._id,
+            nombre: usuarioBase.nombre,
+            apellidos: usuarioBase.apellidos,
+            edad: usuarioBase.edad,
+            correo: usuarioBase.correo,
+            telefono: usuarioBase.telefono,
+            ciudad: usuarioBase.ciudad,
+            foto: usuarioBase.foto,
             esAdministrador: false,
             siguiendo: [],
             seguidores: [],
             publicaciones: [],
             likes: [],
         });
-        expect(res.statusCode).toEqual(201);
+        expect(resBase.statusCode).toEqual(201);
     });
 
     test("NO crea usuario porque no has pasado la contraseña y retorna 400", async () => {
@@ -125,13 +130,7 @@ describe('POST endpoint "/"', () => {
     });
 
     test("NO crea usuario porque ya existe un usuario con ese correo y retorna 400", async () => {
-        let datos = {
-            nombre: 'Test',
-            edad: '2002-08-17T07:32:37.341Z',
-            correo: 'test@mail.com',
-            clave: '1234'
-        }
-        const res = await request(app).post(URLBase).send(datos);
+        const res = await request(app).post(URLBase).send(usuarioBase);
         expect(res.body).toMatchObject({ "message": "E11000 duplicate key error collection: testing.usuarios index: correo_1 dup key: { correo: \"test@mail.com\" }" })
         expect(res.statusCode).toEqual(400);
     });
@@ -139,17 +138,6 @@ describe('POST endpoint "/"', () => {
 
 describe('POST endpoint "/login"', () => {
     test('LOGUEA el usuario por su correo y retorna 200', async () => {
-        let usuario = {
-            nombre: 'Test',
-            apellidos: 'Testing',
-            edad: '2002-08-17T07:32:37.341Z',
-            correo: 'test@mail.com',
-            clave: '1234',
-            telefono: '+34123456789',
-            ciudad: 'here',
-            foto: 'http://blank.page',
-        }
-        await request(app).post(URLBase).send(usuario);
         let datos = {
             correo: 'test@mail.com',
             clave: '1234'
@@ -161,13 +149,13 @@ describe('POST endpoint "/login"', () => {
         expect(res.body).toHaveProperty('usuario', {
             "__v": res.body.usuario.__v,
             "_id": res.body.usuario._id,
-            nombre: usuario.nombre,
-            apellidos: usuario.apellidos,
-            edad: usuario.edad,
-            correo: usuario.correo,
-            telefono: usuario.telefono,
-            ciudad: usuario.ciudad,
-            foto: usuario.foto,
+            nombre: usuarioBase.nombre,
+            apellidos: usuarioBase.apellidos,
+            edad: usuarioBase.edad,
+            correo: usuarioBase.correo,
+            telefono: usuarioBase.telefono,
+            ciudad: usuarioBase.ciudad,
+            foto: usuarioBase.foto,
             esAdministrador: false,
             siguiendo: [],
             seguidores: [],
@@ -179,16 +167,8 @@ describe('POST endpoint "/login"', () => {
     });
 
     test('NO loguea el usuario por la contraseña no estar correcta y retorna 401', async () => {
-        let usuario = {
-            nombre: 'Test',
-            edad: '2002-08-17T07:32:37.341Z',
-            correo: 'test2@mail.com',
-            clave: '1234',
-        }
-        await request(app).post(URLBase).send(usuario);
-
         let loginInfo = {
-            correo: 'test2@mail.com',
+            correo: 'test@mail.com',
             clave: '123'
         }
         const res = await request(app)
@@ -201,7 +181,7 @@ describe('POST endpoint "/login"', () => {
 
     test('NO loguea usuario por el no existir y retorna 401', async () => {
         let loginInfo = {
-            correo: 'test3@mail.com',
+            correo: 'test2@mail.com',
             clave: '1234'
         }
         const res = await request(app)
@@ -215,31 +195,38 @@ describe('POST endpoint "/login"', () => {
 
 describe('GET endpoint "/"', () => {
     test('MOSTRA todos los usuarios de la base de datos y retorna 200', async () => {
+        let usuario = {
+            nombre: 'Test',
+            edad: '2002-08-17T07:32:37.341Z',
+            correo: 'test2@mail.com',
+            clave: '1234',
+        }
+        await request(app).post(URLBase).send(usuario);
         const res = await request(app).get(URLBase)
         expect(res.body).toMatchObject([
             {
                 "__v": 0,
-                "_id": res.body[0]._id,
-                "apellidos": "Testing",
-                "ciudad": "here",
-                "correo": "test@mail.com",
-                "edad": "2002-08-17T07:32:37.341Z",
-                "esAdministrador": false,
-                "foto": "http://blank.page",
+                "_id": resBase.body._id,
+                "nombre": usuarioBase.nombre,
+                "apellidos": usuarioBase.apellidos,
+                "telefono": usuarioBase.telefono,
+                "ciudad": usuarioBase.ciudad,
+                "correo": usuarioBase.correo,
+                "edad": usuarioBase.edad,
+                "esAdministrador": resBase.body.esAdministrador,
+                "foto": usuarioBase.foto,
                 "likes": [],
-                "nombre": "Test",
                 "publicaciones": [],
                 "seguidores": [],
-                "siguiendo": [],
-                "telefono": "+34123456789"
+                "siguiendo": []
             }, {
                 "__v": 0,
                 "_id": res.body[1]._id,
-                "correo": "test2@mail.com",
-                "edad": "2002-08-17T07:32:37.341Z",
+                "nombre": usuario.nombre,
+                "edad": usuario.edad,
+                "correo": usuario.correo,
                 "esAdministrador": false,
                 "likes": [],
-                "nombre": "Test",
                 "publicaciones": [],
                 "seguidores": [],
                 "siguiendo": []
@@ -250,23 +237,22 @@ describe('GET endpoint "/"', () => {
 
 describe('GET endpoint "/:id"', () => {
     test('MOSTRA el usuario del el id pasado y retorna 200', async () => {
-        const id = await request(app).get(URLBase)
-        const res = await request(app).get(`${URLBase}/${id.body[0]._id}`)
+        const res = await request(app).get(`${URLBase}/${resBase.body._id}`)
         expect(res.body).toMatchObject({
-            "__v": 0,
-            "_id": res.body._id,
-            "apellidos": "Testing",
-            "ciudad": "here",
-            "correo": "test@mail.com",
-            "edad": "2002-08-17T07:32:37.341Z",
-            "esAdministrador": false,
-            "foto": "http://blank.page",
-            "likes": [],
-            "nombre": "Test",
-            "publicaciones": [],
-            "seguidores": [],
-            "siguiendo": [],
-            "telefono": "+34123456789"
+            "__v": resBase.body.__v,
+            "_id": resBase.body._id,
+            "nombre": usuarioBase.nombre,
+            "apellidos": usuarioBase.apellidos,
+            "telefono": usuarioBase.telefono,
+            "ciudad": usuarioBase.ciudad,
+            "correo": usuarioBase.correo,
+            "edad": usuarioBase.edad,
+            "esAdministrador": resBase.body.esAdministrador,
+            "foto": usuarioBase.foto,
+            "likes": resBase.body.likes,
+            "publicaciones": resBase.body.publicaciones,
+            "seguidores": resBase.body.seguidores,
+            "siguiendo": resBase.body.siguiendo
         })
         expect(res.statusCode).toEqual(200);
     });
@@ -280,7 +266,6 @@ describe('GET endpoint "/:id"', () => {
 
 describe('PATCH endpoint "/:id"', () => {
     test('CAMBIA los datos del usuario con el id pasado y retorna 200', async () => {
-        const id = await request(app).get(URLBase)
         let datos = {
             "apellidos": "Test",
             "ciudad": "aqui",
@@ -295,11 +280,11 @@ describe('PATCH endpoint "/:id"', () => {
             "siguiendo": [{ id: '1' }],
             "telefono": "+34123456799",
         }
-        const res = await request(app).patch(`${URLBase}/${id.body[0]._id}`).send(datos)
+        const res = await request(app).patch(`${URLBase}/${resBase.body._id}`).send(datos)
         expect(res.body).toMatchObject({
             usuario: {
                 "__v": 0,
-                "_id": id.body[0]._id,
+                "_id": resBase.body._id,
                 "apellidos": datos.apellidos,
                 "ciudad": datos.ciudad,
                 "correo": datos.correo,
@@ -318,11 +303,10 @@ describe('PATCH endpoint "/:id"', () => {
     })
 
     test('NO cambia la clave del usuario con el id pasado y retorna 200', async () => {
-        const id = await request(app).get(URLBase)
         let datos = {
             "clave": "12345"
         }
-        const res = await request(app).patch(`${URLBase}/${id.body[0]._id}`).send(datos)
+        const res = await request(app).patch(`${URLBase}/${resBase.body._id}`).send(datos)
 
         expect(res.body).toHaveProperty("error", "Para cambiar la clave necesita de acceder el endpoint de cambiar clave.");
         expect(res.statusCode).toEqual(200);
@@ -334,9 +318,7 @@ describe('PATCH endpoint "/:id"', () => {
     })
 
     test('NO cambia el usuario por no tener cambios por hacer y retorna 422', async () => {
-        const id = await request(app).get(URLBase)
-        let datos = {}
-        const res = await request(app).patch(`${URLBase}/${id.body[0]._id}`).send(datos)
+        const res = await request(app).patch(`${URLBase}/${resBase.body._id}`).send({})
 
         expect(res.body).toMatchObject({
             "error": "Para cambiar los datos del usuario necesita pasar algun dato para ser cambiado."
