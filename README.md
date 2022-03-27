@@ -28,8 +28,7 @@
 
 - [ ] PUT/PATCH
   - [x] '/:id' cambiaUsuario
-    - [ ] Test
-      - [ ] Test ID invalido
+    - [x] Test
   
   - [ ] '/:id' cambiaClavedeUsuario
     - [ ] Test

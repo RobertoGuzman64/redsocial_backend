@@ -325,4 +325,29 @@ describe('PATCH endpoint "/:id"', () => {
         });
         expect(res.statusCode).toEqual(422);
     })
+
+    test('NO cambia el usuario por estar intentando cambiar su id y retorna 422', async () => {
+        const res = await request(app).patch(`${URLBase}/${resBase.body._id}`).send({ _id: "1" })
+
+        expect(res.body).toMatchObject({
+            "error": "Tu no puedes cambiar el id del usuario"
+        });
+        expect(res.statusCode).toEqual(422);
+    })
+
+    test('NO cambia el usuario por estar intentando cambiar su version y retorna 422', async () => {
+        const res = await request(app).patch(`${URLBase}/${resBase.body._id}`).send({ __v: "1" })
+
+        expect(res.body).toMatchObject({
+            "error": "Tu no puedes cambiar la version del usuario"
+        });
+        expect(res.statusCode).toEqual(422);
+    })
+
+    test('NO cambia el usuario del id pasado porque el id no es valido y retorna 404', async () => {
+        const res = await request(app).patch(`${URLBase}/idInvalido`).send({ apellidos: "Test" })
+
+        expect(res.body).toMatchObject({ "error": "Cast to ObjectId failed for value \"idInvalido\" (type string) at path \"_id\" for model \"Usuario\"" })
+        expect(res.statusCode).toEqual(404);
+    });
 })
