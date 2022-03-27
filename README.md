@@ -11,6 +11,9 @@
     - [x] Test
 
   - [x] '/:id' traerUsuarioId
+    - [x] Test
+
+  - [ ] '/siguiendo' sigueUsuario
     - [ ] Test
 
 - [x] POST
@@ -20,17 +23,25 @@
   - [x] '/login' loginUsuario
     - [x] Test
 
+  - [ ] '/siguiendo' sigueUsuario
+    - [ ] Test
+
 - [ ] PUT/PATCH
   - [x] '/:id' cambiaUsuario
-    - [x] Test
+    - [ ] Test
+      - [ ] Test ID invalido
   
   - [ ] '/:id' cambiaClavedeUsuario
     - [ ] Test
   
+
 - [ ] DELETE
   - [x] '/:id' borrarUsuarioId
     - [ ] Test
 
+  - [ ] '/siguiendo' sigueUsuario
+    - [ ] Test
+  
 ## Post
 - [ ] GET
   - [ ] '/' traerPosts

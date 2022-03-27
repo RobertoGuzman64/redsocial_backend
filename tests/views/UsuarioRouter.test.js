@@ -214,7 +214,7 @@ describe('POST endpoint "/login"', () => {
 });
 
 describe('GET endpoint "/"', () => {
-    test('MOSTRA todos los usuarios en la base de datos y retorna 200', async () => {
+    test('MOSTRA todos los usuarios de la base de datos y retorna 200', async () => {
         const res = await request(app).get(URLBase)
         expect(res.body).toMatchObject([
             {
@@ -248,7 +248,37 @@ describe('GET endpoint "/"', () => {
     });
 });
 
-describe('PATCH endpoint /:id', () => {
+describe('GET endpoint "/:id"', () => {
+    test('MOSTRA el usuario del el id pasado y retorna 200', async () => {
+        const id = await request(app).get(URLBase)
+        const res = await request(app).get(`${URLBase}/${id.body[0]._id}`)
+        expect(res.body).toMatchObject({
+            "__v": 0,
+            "_id": res.body._id,
+            "apellidos": "Testing",
+            "ciudad": "here",
+            "correo": "test@mail.com",
+            "edad": "2002-08-17T07:32:37.341Z",
+            "esAdministrador": false,
+            "foto": "http://blank.page",
+            "likes": [],
+            "nombre": "Test",
+            "publicaciones": [],
+            "seguidores": [],
+            "siguiendo": [],
+            "telefono": "+34123456789"
+        })
+        expect(res.statusCode).toEqual(200);
+    });
+    test('NO mostra el usuario del id pasado porque el id no es valido y retorna 404', async () => {
+        const res = await request(app).get(`${URLBase}/idInvalido`)
+
+        expect(res.body).toMatchObject({ "error": "Cast to ObjectId failed for value \"idInvalido\" (type string) at path \"_id\" for model \"Usuario\"" })
+        expect(res.statusCode).toEqual(404);
+    });
+});
+
+describe('PATCH endpoint "/:id"', () => {
     test('CAMBIA los datos del usuario con el id pasado y retorna 200', async () => {
         const id = await request(app).get(URLBase)
         let datos = {
