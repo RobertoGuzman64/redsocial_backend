@@ -19,8 +19,13 @@ class Usuario {
     }
 
     async traerUsuarioId(id) {
-        let usuarioEncontrado = await UsuarioModel.findById(id);
-        return { status:200, datos: usuarioEncontrado }
+        let usuarioEncontrado = await UsuarioModel.findById(id).then(usuario => {
+            return { status: 200, datos: usuario }
+        }).catch(error => {
+            console.log(error.message)
+            return { status: 404, datos: { error: error.message } }
+        });
+        return usuarioEncontrado
     }
 
     async loginUsuario(body) {
