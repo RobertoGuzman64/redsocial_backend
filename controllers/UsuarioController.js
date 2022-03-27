@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const authConfig = require('../config/auth.js');
 const jwt = require('jsonwebtoken');
 
-// Clase Usuario donde contiene todas las funciones.
+// Clase Usuario donde contiene todos los metodos(funciones de clases llaman metodos).
 
 class Usuario {
     constructor() {
@@ -61,7 +61,7 @@ class Usuario {
         return usuarioLogueado;
     }
 
-    async perfilUsuario(id, body) { // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
+    async cambiaUsuario(id, body) {
         let clave = false;
         if (Object.entries(body).length === 0) {
             return {

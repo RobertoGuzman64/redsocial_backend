@@ -73,7 +73,7 @@ router.patch("/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const body = req.body;
-        let respuesta = await UsuarioController.perfilUsuario(id, body)
+        let respuesta = await UsuarioController.cambiaUsuario(id, body)
         res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
