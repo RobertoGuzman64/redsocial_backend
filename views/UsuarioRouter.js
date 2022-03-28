@@ -65,6 +65,22 @@ router.post("/login", async (req, res) => {
     }
 });
 
+// POST
+// Endpoint de Seguir a un Usuario.
+// http://localhost:5500/usuarios/siguiendo
+
+router.post("/siguiendo", async (req, res) => {
+    try {
+        const body = req.body;
+        let respuesta = await UsuarioController.seguirUsuario(body);
+        res.status(respuesta.status).json(respuesta.datos)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
 // PATCH
 // Endpoint de Modificar el perfil por ID.
 // http://localhost:5500/usuarios

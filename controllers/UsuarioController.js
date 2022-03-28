@@ -8,16 +8,16 @@ const jwt = require('jsonwebtoken');
 class Usuario {
     constructor() {
     }
-
+    // Función de crear un Usuario.
     crearUsuario(body) {
         body.clave = bcrypt.hashSync(body.clave, Number.parseInt(authConfig.rondas));
         return UsuarioModel.create(body);
     }
-
+    // Función mostrar todos los Usuarios.
     traerUsuarios() {
         return UsuarioModel.find();
     }
-
+    // Función de buscar un usuario por ID.
     async traerUsuarioId(id) {
         let usuarioEncontrado = await UsuarioModel.findById(id).then(usuario => {
             return { status: 200, datos: usuario }
@@ -26,7 +26,7 @@ class Usuario {
         });
         return usuarioEncontrado
     }
-
+    // Función de login.
     async loginUsuario(body) {
         let correo = body.correo;
         let clave = body.clave;
@@ -64,7 +64,7 @@ class Usuario {
         });
         return usuarioLogueado;
     }
-
+    // Función de modificar el perfil.
     async cambiaUsuario(id, body) {
         let clave = false;
         if (Object.entries(body).length === 0) {
@@ -124,9 +124,28 @@ class Usuario {
             return usuarioCambiado;
         }
     }
-
+    // Funcion de borrar un Usuario por ID.
     async borrarUsuario() { // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
         return UsuarioModel.findByIdAndRemove({ _id: req._id });
+    }
+    // Funcion de seguir a un usuario
+    async seguirUsuario(id, body) {
+        let usuarioSeguido = await UsuarioModel.findByIdAndUpdate(id, { $push: { siguiendo: body.siguiendo } }, { new: true }).then(usuario => {
+            return {
+                status: 200,
+                datos: {
+                    usuario: usuario
+                }
+            }
+        }).catch(error => {
+            return {
+                status: 404,
+                datos: {
+                    error: error.message
+                }
+            }
+        })
+        return usuarioSeguido;
     }
 }
 
