@@ -190,8 +190,22 @@ class Usuario {
         return usuarioEncontrado;
     }
     // Funcion de borrar un Usuario por ID.
-    async borrarUsuario() { // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
-        return UsuarioModel.findByIdAndRemove({ _id: req._id });
+    async borrarUsuario(id) {
+        return await UsuarioModel.findByIdAndRemove(id).then(usuarioBorrado =>{
+            return {
+                status: 200,
+                datos: {
+                    usuario: `Usuario con el correo ${usuarioBorrado.correo} ha sido borrado con suceso`
+                }
+            }
+        }).catch(error =>{
+            return {
+                status: 404,
+                datos: {
+                    error: error.message
+                }
+            }
+        });
     }
     // Funcion de seguir a un usuario
     async seguirUsuario(id, body) {

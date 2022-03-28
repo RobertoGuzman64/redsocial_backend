@@ -165,10 +165,10 @@ router.patch("/:id", async (req, res) => {
 // Endpoint de borrar un Usuario por ID.
 // http://localhost:5500/usuarios
 
-router.delete("/", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
-        const body = req.body;
-        let respuesta = await UsuarioController.borrarUsuario(body);
+        const id = req.params.id;
+        let respuesta = await UsuarioController.borrarUsuario(id)
         res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
