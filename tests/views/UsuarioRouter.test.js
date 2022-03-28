@@ -236,7 +236,7 @@ describe('GET endpoint "/"', () => {
 });
 
 describe('GET endpoint "/:id"', () => {
-    test('MOSTRA el usuario del el id pasado y retorna 200', async () => {
+    test('MOSTRA el usuario del id pasado y retorna 200', async () => {
         const res = await request(app).get(`${URLBase}/${resBase.body._id}`)
         expect(res.body).toMatchObject({
             "__v": resBase.body.__v,
@@ -351,3 +351,17 @@ describe('PATCH endpoint "/:id"', () => {
         expect(res.statusCode).toEqual(404);
     });
 })
+
+describe('DELETE endpoint "/:id"', () => {
+    test('BORRA el usuario del id pasado y retorna 200', async () => {
+        const res = await request(app).delete(`${URLBase}/${resBase.body._id}`)
+        expect(res.body).toMatchObject({ "usuario": "Usuario con el correo test1@mail.com ha sido borrado con suceso" })
+        expect(res.statusCode).toEqual(200);
+    });
+    test('NO borra el usuario del id pasado porque el id no es valido y retorna 404', async () => {
+        const res = await request(app).delete(`${URLBase}/idInvalido`)
+
+        expect(res.body).toMatchObject({ "error": "Cast to ObjectId failed for value \"idInvalido\" (type string) at path \"_id\" for model \"Usuario\"" })
+        expect(res.statusCode).toEqual(404);
+    });
+});

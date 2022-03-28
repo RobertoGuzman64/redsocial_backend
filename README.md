@@ -19,7 +19,7 @@
   - [x] '/siguiendo' traerUsuariosQueTeSiguen
     - [ ] Test
 
-- [x] POST
+- [ ] POST
   - [x] '/' crearUsuario
     - [x] Test
  
