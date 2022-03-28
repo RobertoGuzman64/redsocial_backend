@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 
 router.get("/siguiendo", async (req, res) => {
     try {
-        let respuesta = await UsuarioController.traerUsuariosSiguiendo(req.usuario.id);
+        let respuesta = await UsuarioController.traerSiguiendo(req.usuario.id);
         res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({

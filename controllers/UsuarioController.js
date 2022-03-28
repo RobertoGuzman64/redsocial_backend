@@ -18,9 +18,14 @@ class Usuario {
         return UsuarioModel.find();
     }
     // Funcion de mostrar los Usuarios que sigues.
-    async traerUsuariosSiguiendo(id) {
+    async traerSiguiendo(id) {
         let usuario = await UsuarioModel.findById(id);
         return usuario.siguiendo;
+    }
+    // Función de mostrar los Usuarios que te siguen.
+    async traerSeguidores(id) {
+        let usuario = await UsuarioModel.findById(id);
+        return usuario.seguidores;
     }
     // Función de buscar un usuario por ID.
     async traerUsuarioId(id) {
