@@ -9,7 +9,8 @@ const UsuarioController = require('../controllers/UsuarioController');
 
 router.get("/", async (req, res) => {
     try {
-        res.json(await UsuarioController.traerUsuarios());
+        let respuesta = await UsuarioController.traerUsuarios();
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -23,7 +24,23 @@ router.get("/", async (req, res) => {
 
 router.get("/siguiendo", async (req, res) => {
     try {
-        res.json(await UsuarioController.traerUsuariosSiguiendo(req.usuario.id));
+        let respuesta = await UsuarioController.traerUsuariosSiguiendo(req.usuario.id);
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
+// GET
+// Endpoint de motrar los Usuarios que te siguen.
+// http://localhost:5500/usuarios/siguiendo
+
+router.get("/siguiendo", async (req, res) => {
+    try {
+        let respuesta = await UsuarioController.traerSeguidores(req.usuario.id);
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -54,7 +71,8 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const body = req.body;
-        res.status(201).json(await UsuarioController.crearUsuario(body));
+        let respuesta = await UsuarioController.crearUsuario(body);
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(400).json({
             message: error.message
@@ -134,7 +152,8 @@ router.patch("/:id", async (req, res) => {
 router.delete("/", async (req, res) => {
     try {
         const body = req.body;
-        res.json(await UsuarioController.borrarUsuario(body));
+        let respuesta = await UsuarioController.borrarUsuario(body);
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
