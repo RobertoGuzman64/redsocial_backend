@@ -27,6 +27,11 @@ class Usuario {
         let usuario = await UsuarioModel.findById(id);
         return usuario.seguidores;
     }
+    // Función de buscar un Usuario por nombre, apellidos o correo.
+    async buscarUsuario(body) {
+        let usuario = await UsuarioModel.findOne(body);
+        return usuario;
+    }
     // Función de buscar un usuario por ID.
     async traerUsuarioId(id) {
         let usuarioEncontrado = await UsuarioModel.findById(id).then(usuario => {

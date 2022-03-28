@@ -64,6 +64,22 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// GET
+// Endpoint de buscar un Usuario por nombre, apellido o correo.
+// http://localhost:5500/usuarios/busqueda
+
+router.get("/busqueda", async (req, res) => {
+    try {
+        let busqueda = req.query.busqueda;
+        let respuesta = await UsuarioController.buscarUsuario(busqueda);
+        res.status(respuesta.status).json(respuesta.datos)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
 // POST
 // Endpoint de crear un Usuario.
 // http://localhost:5500/usuarios

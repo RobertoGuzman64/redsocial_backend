@@ -16,7 +16,7 @@
   - [x] '/siguiendo' traerUsuariosQueSigues
     - [ ] Test
 
-  - [ ] '/siguiendo' traerUsuariosQueTeSiguen
+  - [x] '/siguiendo' traerUsuariosQueTeSiguen
     - [ ] Test
 
 - [x] POST
@@ -68,7 +68,7 @@
 ### Usuario
 
 - [ ] GET
-  - [ ] '/busqueda' traerUsuarioPorNombreOPorEmail (query param) (?nombre=Nombre) (?email=email@mail.any) (?apellidos=apellidos)
+  - [x] '/busqueda' traerUsuarioPorNombreOPorEmail (query param) (?nombre=Nombre) (?email=email@mail.any) (?apellidos=apellidos)
     - [ ] Test
 
 - [ ] GET
