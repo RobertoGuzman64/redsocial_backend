@@ -18,7 +18,21 @@ router.get("/", async (req, res) => {
 });
 
 // GET
-// Edpoint de mostrar un Usuario por ID.
+// Endpoint de mostrar los Usuarios que sigues.
+// http://localhost:5500/usuarios/siguiendo
+
+router.get("/siguiendo", async (req, res) => {
+    try {
+        res.json(await UsuarioController.traerUsuariosSiguiendo(req.usuario.id));
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
+// GET
+// Endpoint de mostrar un Usuario por ID.
 // http://localhost:5500/usuarios/:id
 
 router.get("/:id", async (req, res) => {

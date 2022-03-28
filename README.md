@@ -13,7 +13,10 @@
   - [x] '/:id' traerUsuarioId
     - [x] Test
 
-  - [ ] '/siguiendo' traerUsuariosSeguidos
+  - [x] '/siguiendo' traerUsuariosQueSigues
+    - [ ] Test
+
+  - [ ] '/siguiendo' traerUsuariosQueTeSiguen
     - [ ] Test
 
 - [x] POST
