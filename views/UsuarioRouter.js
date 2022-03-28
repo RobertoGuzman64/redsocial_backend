@@ -9,8 +9,7 @@ const UsuarioController = require('../controllers/UsuarioController');
 
 router.get("/", async (req, res) => {
     try {
-        let respuesta = await UsuarioController.traerUsuarios();
-        res.status(respuesta.status).json(respuesta.datos);
+        res.json(await UsuarioController.traerUsuarios());
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -39,8 +38,7 @@ router.get("/siguiendo", async (req, res) => {
 
 router.get("/siguiendo", async (req, res) => {
     try {
-        let respuesta = await UsuarioController.traerSeguidores(req.usuario.id);
-        res.status(respuesta.status).json(respuesta.datos);
+        res.json(await UsuarioController.traerUsuariosSiguiendo(req.usuario.id));
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -87,8 +85,7 @@ router.get("/busqueda", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const body = req.body;
-        let respuesta = await UsuarioController.crearUsuario(body);
-        res.status(respuesta.status).json(respuesta.datos);
+        res.status(201).json(await UsuarioController.crearUsuario(body));
     } catch (error) {
         return res.status(400).json({
             message: error.message
