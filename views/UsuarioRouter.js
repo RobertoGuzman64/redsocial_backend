@@ -33,7 +33,6 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-
 // POST
 // Endpoint de crear un Usuario.
 // http://localhost:5500/usuarios
@@ -106,6 +105,22 @@ router.delete("/", async (req, res) => {
     try {
         const body = req.body;
         res.json(await UsuarioController.borrarUsuario(body));
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
+// DELETE
+// Endpoint de dejar de seguir a un Usuario.
+// http://localhost:5500/usuarios/siguiendo
+
+router.delete("/siguiendo", async (req, res) => {
+    try {
+        const body = req.body;
+        let respuesta = await UsuarioController.dejarDeSeguirUsuario(body);
+        res.status(respuesta.status).json(respuesta.datos)
     } catch (error) {
         return res.status(500).json({
             message: error.message

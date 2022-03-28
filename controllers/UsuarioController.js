@@ -147,6 +147,25 @@ class Usuario {
         })
         return usuarioSeguido;
     }
+    // Funcion de dejar de seguir a un usuario
+    async dejarDeSeguirUsuario(id, body) {
+        let usuarioDejado = await UsuarioModel.findByIdAndUpdate(id, { $pull: { siguiendo: body.siguiendo } }, { new: true }).then(usuario => {
+            return {
+                status: 200,
+                datos: {
+                    usuario: usuario
+                }
+            }
+        }).catch(error => {
+            return {
+                status: 404,
+                datos: {
+                    error: error.message
+                }
+            }
+        })
+        return usuarioDejado;
+    }
 }
 
 
