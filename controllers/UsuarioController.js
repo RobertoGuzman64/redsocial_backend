@@ -124,6 +124,56 @@ class Usuario {
             return usuarioCambiado;
         }
     }
+    // Funcion de cambiar clave
+    async cambiarClave(id, body) {
+        let clave = body.clave;
+        let claveNueva = body.claveNueva;
+        let usuarioEncontrado = await UsuarioModel.findById(id).then(usuario => {
+            if (!usuario) {
+                return {
+                    status: 404,
+                    datos: {
+                        error: 'El usuario no existe'
+                    }
+                }
+            } else {
+                if (bcrypt.compareSync(clave, usuario.clave)) {
+                    let claveNuevaHash = bcrypt.hashSync(claveNueva, Number.parseInt(authConfig.rondas));
+                    let usuarioCambiado = await UsuarioModel.findByIdAndUpdate(id, { clave: claveNuevaHash }, { new: true }).then(actualizado => {
+                        return {
+                            status: 200,
+                            datos: {
+                                usuario: actualizado
+                            }
+                        }
+                    }).catch(error => {
+                        return {
+                            status: 404,
+                            datos: {
+                                error: error.message
+                            }
+                        }
+                    })
+                    return usuarioCambiado;
+                } else {
+                    return {
+                        status: 401,
+                        datos: {
+                            error: 'La clave no es correcta'
+                        }
+                    }
+                }
+            }
+        }).catch(error => {
+            return {
+                status: 404,
+                datos: {
+                    error: error.message
+                }
+            }
+        })
+        return usuarioEncontrado;
+    }
     // Funcion de borrar un Usuario por ID.
     async borrarUsuario() { // FUNCION AUN POR PROBAR Y HACER QUE FUNCIONE.
         return UsuarioModel.findByIdAndRemove({ _id: req._id });

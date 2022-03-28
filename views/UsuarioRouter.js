@@ -95,7 +95,23 @@ router.patch("/:id", async (req, res) => {
             message: error.message
         });
     }
-})
+});
+
+// PATCH
+// Endpoint de Modificar la contraseña por ID.
+// http://localhost:5500/usuarios
+router.patch("/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const body = req.body;
+        let respuesta = await UsuarioController.cambiaClaveUsuario(id, body)
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
 
 // DELETE
 // Endpoint de borrar un Usuario por ID.

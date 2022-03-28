@@ -13,7 +13,7 @@
   - [x] '/:id' traerUsuarioId
     - [x] Test
 
-  - [ ] '/siguiendo' sigueUsuario
+  - [ ] '/siguiendo' traerUsuariosSeguidos
     - [ ] Test
 
 - [x] POST
@@ -23,14 +23,14 @@
   - [x] '/login' loginUsuario
     - [x] Test
 
-  - [ ] '/siguiendo' sigueUsuario
+  - [x] '/siguiendo' sigueUsuario
     - [ ] Test
 
 - [ ] PUT/PATCH
   - [x] '/:id' cambiaUsuario
     - [x] Test
   
-  - [ ] '/:id' cambiaClavedeUsuario
+  - [x] '/:id' cambiaClavedeUsuario
     - [ ] Test
   
 
@@ -38,7 +38,7 @@
   - [x] '/:id' borrarUsuarioId
     - [ ] Test
 
-  - [ ] '/siguiendo' sigueUsuario
+  - [x] '/siguiendo' sigueUsuario
     - [ ] Test
   
 ## Post
@@ -65,7 +65,7 @@
 ### Usuario
 
 - [ ] GET
-  - [ ] '/busqueda' traerUsuarioPorNombreOPorEmail (query param) (?nombre=Nombre) (?email=email@mail.any)
+  - [ ] '/busqueda' traerUsuarioPorNombreOPorEmail (query param) (?nombre=Nombre) (?email=email@mail.any) (?apellidos=apellidos)
     - [ ] Test
 
 - [ ] GET
