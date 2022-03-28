@@ -56,7 +56,7 @@ router.get("/:id", async (req, res) => {
     try {
         let id = req.params.id
         let respuesta = await UsuarioController.traerUsuarioId(id);
-        res.status(respuesta.status).json(respuesta.datos)
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -72,7 +72,7 @@ router.get("/busqueda", async (req, res) => {
     try {
         let busqueda = req.query.busqueda;
         let respuesta = await UsuarioController.buscarUsuario(busqueda);
-        res.status(respuesta.status).json(respuesta.datos)
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -104,7 +104,7 @@ router.post("/login", async (req, res) => {
     try {
         const body = req.body;
         let respuesta = await UsuarioController.loginUsuario(body);
-        res.status(respuesta.status).json(respuesta.datos)
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -120,7 +120,7 @@ router.post("/siguiendo", async (req, res) => {
     try {
         const body = req.body;
         let respuesta = await UsuarioController.seguirUsuario(body);
-        res.status(respuesta.status).json(respuesta.datos)
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -185,7 +185,7 @@ router.delete("/siguiendo", async (req, res) => {
     try {
         const body = req.body;
         let respuesta = await UsuarioController.dejarDeSeguirUsuario(body);
-        res.status(respuesta.status).json(respuesta.datos)
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message

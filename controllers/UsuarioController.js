@@ -154,7 +154,7 @@ class Usuario {
             } else {
                 if (bcrypt.compareSync(clave, usuario.clave)) {
                     let claveNuevaHash = bcrypt.hashSync(claveNueva, Number.parseInt(authConfig.rondas));
-                    let usuarioCambiado = await UsuarioModel.findByIdAndUpdate(id, { clave: claveNuevaHash }, { new: true }).then(actualizado => {
+                    let usuarioCambiado = UsuarioModel.findByIdAndUpdate(id, { clave: claveNuevaHash }, { new: true }).then(actualizado => {
                         return {
                             status: 200,
                             datos: {
