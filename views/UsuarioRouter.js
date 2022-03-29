@@ -9,7 +9,8 @@ const UsuarioController = require('../controllers/UsuarioController');
 
 router.get("/", async (req, res) => {
     try {
-        res.json(await UsuarioController.traerUsuarios());
+        let respuesta = await UsuarioController.traerUsuarios();
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
