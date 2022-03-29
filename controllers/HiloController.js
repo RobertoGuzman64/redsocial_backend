@@ -17,6 +17,25 @@ class Hilo {
         });
         return hilosEncontrados;
     }
+
+    // Función mostrar un Hilo por ID.
+    async traerHiloId(id) {
+        let hiloEncontrado = await HiloModel.findById(id).then(hilo => {
+            return { status: 200, datos: hilo }
+        }).catch(error => {
+            return { status: 404, datos: { error: error.message } }
+        });
+        return hiloEncontrado;
+    }
+
+
+
+
+
+
+
+
+
 }
 
 

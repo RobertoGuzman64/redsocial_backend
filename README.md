@@ -46,10 +46,10 @@
   
 ## Post
 - [ ] GET
-  - [ ] '/' traerPosts
+  - [x] '/' traerPosts
     - [ ] Test
   
-  - [ ] '/:id' traerPostId
+  - [x] '/:id' traerPostId
     - [ ] Test
 
 - [ ] POST
