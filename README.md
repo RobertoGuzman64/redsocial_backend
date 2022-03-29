@@ -57,7 +57,7 @@
     - [ ] Test
 
 - [ ] PUT/PATCH
-  - [ ] '/:id' cambiaPost
+  - [x] '/:id' cambiaPost
     - [ ] Test
 
 - [ ] DELETE

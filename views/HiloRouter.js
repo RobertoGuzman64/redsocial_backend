@@ -49,6 +49,22 @@ router.post("/", async (req, res) => {
     }
 });
 
+// PATCH
+// Endpoint de Modificar el Hilo por ID.
+// http://localhost:5500/hilos/:id
+
+router.patch("/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const body = req.body;
+        let respuesta = await HiloController.cambiaHilo(id, body)
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
 
 
 
