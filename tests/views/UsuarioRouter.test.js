@@ -115,23 +115,23 @@ describe('POST endpoint "/"', () => {
         }
         const resNombre = await request(app).post(URLBase).send(datosSinNombre);
 
-        expect(resNombre.body).toMatchObject({ "message": "Usuario validation failed: nombre: Path `nombre` is required." })
+        expect(resNombre.body).toMatchObject({ "error": "Usuario validation failed: nombre: Path `nombre` is required." })
         expect(resNombre.statusCode).toEqual(400);
 
         const resEdad = await request(app).post(URLBase).send(datosSinEdad);
 
-        expect(resEdad.body).toMatchObject({ "message": "Usuario validation failed: edad: Path `edad` is required." })
+        expect(resEdad.body).toMatchObject({ "error": "Usuario validation failed: edad: Path `edad` is required." })
         expect(resEdad.statusCode).toEqual(400);
 
         const resCorreo = await request(app).post(URLBase).send(datosSinCorreo);
 
-        expect(resCorreo.body).toMatchObject({ "message": "Usuario validation failed: correo: Path `correo` is required." })
+        expect(resCorreo.body).toMatchObject({ "error": "Usuario validation failed: correo: Path `correo` is required." })
         expect(resCorreo.statusCode).toEqual(400);
     });
 
     test("NO crea usuario porque ya existe un usuario con ese correo y retorna 400", async () => {
         const res = await request(app).post(URLBase).send(usuarioBase);
-        expect(res.body).toMatchObject({ "message": "E11000 duplicate key error collection: testing.usuarios index: correo_1 dup key: { correo: \"test@mail.com\" }" })
+        expect(res.body).toMatchObject({ "error": "E11000 duplicate key error collection: testing.usuarios index: correo_1 dup key: { correo: \"test@mail.com\" }" })
         expect(res.statusCode).toEqual(400);
     });
 });
