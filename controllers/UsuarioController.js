@@ -8,13 +8,18 @@ const jwt = require('jsonwebtoken');
 class Usuario {
     constructor() {
     }
-    
-    // Función de crear un Usuario.
-    crearUsuario(body) {
-        body.clave = bcrypt.hashSync(body.clave, Number.parseInt(authConfig.rondas));
-        return UsuarioModel.create(body);
-    }
 
+    // Función de crear un Usuario con contraseña encriptada.
+    async crearUsuario(body) {
+        body.clave = bcrypt.hashSync(body.clave, Number.parseInt(authConfig.rondas));
+        let usuarioNuevo = await UsuarioModel.create(body).then(usuarioNuevo => {
+            return { status: 201, datos: usuarioNuevo }
+        }).catch(error => {
+            return { status: 400, datos: { error: error.message } }
+        });
+        return usuarioNuevo;
+    }
+    
     // Función mostrar todos los Usuarios.
     async traerUsuarios() {
         let usuariosEncontrados = await UsuarioModel.find().then(usuario => {

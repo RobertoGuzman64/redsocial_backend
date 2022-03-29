@@ -86,7 +86,8 @@ router.get("/busqueda", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const body = req.body;
-        res.status(201).json(await UsuarioController.crearUsuario(body));
+        let respuesta = await UsuarioController.crearUsuario(body);
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(400).json({
             message: error.message
