@@ -28,5 +28,5 @@ const hiloSchema = new Schema ({
     },
 })
 
-const Hilo = mongoose.model("Usuario", hiloSchema);
+const Hilo = mongoose.model("Hilo", hiloSchema);
 module.exports = Hilo;

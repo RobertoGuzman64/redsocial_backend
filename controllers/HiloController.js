@@ -8,6 +8,15 @@ class Hilo {
     constructor() {
     }
 
+    // Función mostrar todos los Hilos.
+    async traerHilos() {
+        let hilosEncontrados = await HiloModel.find().then(hilo => {
+            return { status: 200, datos: hilo }
+        }).catch(error => {
+            return { status: 404, datos: { error: error.message } }
+        });
+        return hilosEncontrados;
+    }
 }
 
 
