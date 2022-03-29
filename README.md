@@ -61,7 +61,7 @@
     - [ ] Test
 
 - [ ] DELETE
-  - [ ] '/:id' borrarPostId
+  - [x] '/:id' borrarPostId
     - [ ] Test
 
 ## Extra

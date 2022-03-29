@@ -66,7 +66,21 @@ router.patch("/:id", async (req, res) => {
     }
 });
 
+// DELETE
+// Endpoint de borrar un Hilo por ID.
+// http://localhost:5500/hilos/:id
 
+router.delete("/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        let respuesta = await UsuarioController.borrarUsuario(id)
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
 
 
 

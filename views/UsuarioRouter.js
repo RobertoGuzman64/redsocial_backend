@@ -129,7 +129,7 @@ router.post("/siguiendo", async (req, res) => {
 
 // PATCH
 // Endpoint de Modificar el perfil por ID.
-// http://localhost:5500/usuarios
+// http://localhost:5500/usuarios/:id
 
 router.patch("/:id", async (req, res) => {
     try {
@@ -146,7 +146,7 @@ router.patch("/:id", async (req, res) => {
 
 // PATCH
 // Endpoint de Modificar la contraseña por ID.
-// http://localhost:5500/usuarios
+// http://localhost:5500/usuarios/:id
 router.patch("/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -162,7 +162,7 @@ router.patch("/:id", async (req, res) => {
 
 // DELETE
 // Endpoint de borrar un Usuario por ID.
-// http://localhost:5500/usuarios
+// http://localhost:5500/usuarios/:id
 
 router.delete("/:id", async (req, res) => {
     try {

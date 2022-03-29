@@ -48,6 +48,24 @@ class Hilo {
         return hiloActualizado;
     }
 
+    // Funcion de borrar un Hilo por ID.
+    async borrarHilo(id) {
+        return await HiloModel.findByIdAndRemove(id).then(hiloBorrado => {
+            return {
+                status: 200,
+                datos: {
+                    hilo: `Hilo con el correo ${hiloBorrado.correo} ha sido eliminado`
+                }
+            }
+        }).catch(error => {
+            return {
+                status: 404,
+                datos: {
+                    error: error.message
+                }
+            }
+        });
+    }
 
 
 
