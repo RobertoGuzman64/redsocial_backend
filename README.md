@@ -53,7 +53,7 @@
     - [ ] Test
 
 - [ ] POST
-  - [ ] '/' crearPost
+  - [x] '/' crearPost
     - [ ] Test
 
 - [ ] PUT/PATCH

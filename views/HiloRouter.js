@@ -33,7 +33,21 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// POST
+// Endpoint de crear un Hilo.
+// http://localhost:5500/hilos
 
+router.post("/", async (req, res) => {
+    try {
+        const body = req.body;
+        let respuesta = await HiloController.crearHilo(body);
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message
+        });
+    }
+});
 
 
 

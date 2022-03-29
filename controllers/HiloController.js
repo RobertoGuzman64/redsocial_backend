@@ -28,8 +28,16 @@ class Hilo {
         return hiloEncontrado;
     }
 
-
-
+    // Función de crear un Hilo.
+    async crearHilo(body) {
+        let hiloNuevo = await HiloModel.create(body).then(hiloNuevo => {
+            return { status: 200, datos: hiloNuevo }
+        }).catch(error => {
+            return { status: 400, datos: { error: error.message } }
+        });
+        return hiloNuevo;
+    }
+    
 
 
 
