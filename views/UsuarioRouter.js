@@ -113,12 +113,13 @@ router.post("/login", async (req, res) => {
 
 // POST
 // Endpoint de Seguir a un Usuario.
-// http://localhost:5500/usuarios/siguiendo
+// http://localhost:5500/usuarios/:id/siguiendo
 
-router.post("/siguiendo", async (req, res) => {
+router.post("/:id/siguiendo", async (req, res) => {
     try {
+        const id = req.params.id;
         const body = req.body;
-        let respuesta = await UsuarioController.seguirUsuario(body);
+        let respuesta = await UsuarioController.seguirUsuario(id, body);
         res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
