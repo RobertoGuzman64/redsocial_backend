@@ -41,8 +41,12 @@ class Usuario {
     }
     // Función de mostrar los Usuarios que te siguen.
     async traerUsuariosQueTeSiguen(id) {
-        let usuario = await UsuarioModel.findById(id);
-        return usuario.seguidores;
+        let usuario = await UsuarioModel.findById(id).select('seguidores').then(seguidores => {
+            return { status: 200, datos: seguidores };
+        }).catch(error=> {
+            return { status: 404, datos: error };
+        });
+        return usuario;
     }
     // Función de buscar un Usuario por nombre, apellidos o correo.
     async buscarUsuario(body) {

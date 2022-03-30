@@ -89,7 +89,8 @@ router.get("/:id/siguiendo", async (req, res) => {
 router.get("/:id/seguidores", async (req, res) => {
     try {
         const id = req.params.id;
-        res.json(await UsuarioController.traerUsuariosQueTeSiguen(id));
+        let respuesta = await UsuarioController.traerUsuariosQueTeSiguen(id);
+        res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
             message: error.message
