@@ -19,7 +19,7 @@ class Usuario {
         });
         return usuarioNuevo;
     }
-    
+
     // Función mostrar todos los Usuarios.
     async traerUsuarios() {
         let usuariosEncontrados = await UsuarioModel.find().then(usuario => {
@@ -31,12 +31,16 @@ class Usuario {
     }
 
     // Funcion de mostrar los Usuarios que sigues.
-    async traerSiguiendo(id) {
-        let usuario = await UsuarioModel.findById(id);
-        return usuario.siguiendo;
+    async traerUsuariosQueSigues(id) {
+        let usuario = await UsuarioModel.findById(id).select('siguiendo').then(siguiendo => {
+            return { status: 200, datos: siguiendo };
+        }).catch(error=> {
+            return { status: 404, datos: error };
+        });
+        return usuario;
     }
     // Función de mostrar los Usuarios que te siguen.
-    async traerSeguidores(id) {
+    async traerUsuariosQueTeSiguen(id) {
         let usuario = await UsuarioModel.findById(id);
         return usuario.seguidores;
     }
