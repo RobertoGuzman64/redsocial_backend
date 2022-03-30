@@ -70,9 +70,10 @@ router.get("/", async (req, res) => {
 // Endpoint de mostrar los Usuarios que sigues.
 // http://localhost:5500/usuarios/siguiendo
 
-router.get("/siguiendo", async (req, res) => {
+router.get("/:id/siguiendo", async (req, res) => {
     try {
-        let respuesta = await UsuarioController.traerSiguiendo(req.usuario.id);
+        const id = req.params.id;
+        let respuesta = await UsuarioController.traerUsuariosQueSigues(id);
         res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
@@ -85,9 +86,10 @@ router.get("/siguiendo", async (req, res) => {
 // Endpoint de motrar los Usuarios que te siguen.
 // http://localhost:5500/usuarios/siguiendo
 
-router.get("/siguiendo", async (req, res) => {
+router.get("/:id/seguidores", async (req, res) => {
     try {
-        res.json(await UsuarioController.traerUsuariosSiguiendo(req.usuario.id));
+        const id = req.params.id;
+        res.json(await UsuarioController.traerUsuariosQueTeSiguen(id));
     } catch (error) {
         return res.status(500).json({
             message: error.message
