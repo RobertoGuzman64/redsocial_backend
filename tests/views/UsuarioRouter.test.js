@@ -212,10 +212,18 @@ describe('POST endpoint "/:id/siguiendo"', () => {
         }
         otraResConOtroUsuario = await request(app).post(URLBase).send(usuario);
         let datos = {
-            _id: resBase.body._id,
-            nombre: resBase.body.nombre,
-            apellidos: resBase.body.apellidos,
-            foto: resBase.body.foto
+            siguiendo: {
+                _id: resBase.body._id,
+                nombre: resBase.body.nombre,
+                apellidos: resBase.body.apellidos,
+                foto: resBase.body.foto
+            },
+            usuario: {
+                _id: otraResConOtroUsuario.body._id,
+                nombre: otraResConOtroUsuario.body.nombre,
+                apellidos: otraResConOtroUsuario.body.apellidos,
+                foto: otraResConOtroUsuario.body.foto
+            },
         }
         let res = await request(app).post(`${URLBase}/${otraResConOtroUsuario.body._id}/siguiendo`).send(datos);
         expect(res.body).toMatchObject({
@@ -260,7 +268,12 @@ describe('GET endpoint "/"', () => {
                 "foto": usuarioBase.foto,
                 "likes": [],
                 "publicaciones": [],
-                "seguidores": [],
+                "seguidores": [
+                    {
+                        "_id": res.body[1]._id,
+                        "nombre": "Test",
+                    },
+                ],
                 "siguiendo": []
             }, {
                 "__v": 0,
@@ -301,7 +314,12 @@ describe('GET endpoint "/:id"', () => {
             "foto": usuarioBase.foto,
             "likes": resBase.body.likes,
             "publicaciones": resBase.body.publicaciones,
-            "seguidores": resBase.body.seguidores,
+            "seguidores": [
+                {
+                    "_id": otraResConOtroUsuario.body._id,
+                    "nombre": "Test",
+                },
+            ],
             "siguiendo": resBase.body.siguiendo
         })
         expect(res.statusCode).toEqual(200);
