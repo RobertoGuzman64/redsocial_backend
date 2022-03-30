@@ -360,14 +360,13 @@ describe('GET endpoint "/:id/siguiendo"', () => {
 describe('GET endpoint "/:id/seguidores"', () => {
     test('MUESTRA el usuario del id pasado y retorna 200', async () => {
         const res = await request(app).get(`${URLBase}/${resBase.body._id}/seguidores`)
+        console.log(res.body)
         expect(res.body).toMatchObject({
             "_id": resBase.body._id,
-            "siguiendo": [
+            "seguidores": [
                 {
                     "_id": otraResConOtroUsuario.body._id,
                     "nombre": "Test",
-                    "apellidos": "Testing",
-                    "foto": "http://blank.page",
                 },
             ],
         })
