@@ -12,6 +12,7 @@ const url = `mongodb+srv://${usuario}:${clave}@${cluster}.lfcn0.mongodb.net/${da
 const URLBase = '/usuarios';
 
 let usuarioBase;
+let otraResConOtroUsuario;
 let resBase;
 
 beforeAll((done) => {
@@ -201,7 +202,7 @@ describe('POST endpoint "/login"', () => {
     });
 });
 
-describe('POST endpoint "/siguiendo"', () => {
+describe('POST endpoint "/:id/siguiendo"', () => {
     test('AÑADE un nuevo usuario a tu lista de usuarios que sigues y retorna 200', async () => {
         let usuario = {
             nombre: 'Test',
@@ -209,17 +210,17 @@ describe('POST endpoint "/siguiendo"', () => {
             correo: 'test2@mail.com',
             clave: '1234',
         }
-        let otroUsuario = await request(app).post(URLBase).send(usuario);
+        otraResConOtroUsuario = await request(app).post(URLBase).send(usuario);
         let datos = {
             _id: resBase.body._id,
             nombre: resBase.body.nombre,
             apellidos: resBase.body.apellidos,
             foto: resBase.body.foto
         }
-        let res = await request(app).post(`${URLBase}/${otroUsuario.body._id}/siguiendo`).send(datos);
+        let res = await request(app).post(`${URLBase}/${otraResConOtroUsuario.body._id}/siguiendo`).send(datos);
         expect(res.body).toMatchObject({
             usuario: {
-                _id: otroUsuario.body._id,
+                _id: otraResConOtroUsuario.body._id,
                 nombre: 'Test',
                 edad: '2002-08-17T07:32:37.341Z',
                 correo: 'test2@mail.com',
@@ -302,6 +303,30 @@ describe('GET endpoint "/:id"', () => {
             "publicaciones": resBase.body.publicaciones,
             "seguidores": resBase.body.seguidores,
             "siguiendo": resBase.body.siguiendo
+        })
+        expect(res.statusCode).toEqual(200);
+    });
+    test('NO muestra el usuario del id pasado porque el id no es valido y retorna 404', async () => {
+        const res = await request(app).get(`${URLBase}/idInvalido`)
+
+        expect(res.body).toMatchObject({ "error": "Cast to ObjectId failed for value \"idInvalido\" (type string) at path \"_id\" for model \"Usuario\"" })
+        expect(res.statusCode).toEqual(404);
+    });
+});
+
+describe('GET endpoint "/:id/siguiendo"', () => {
+    test('MUESTRA el usuario del id pasado y retorna 200', async () => {
+        const res = await request(app).get(`${URLBase}/${otraResConOtroUsuario.body._id}/siguiendo`)
+        expect(res.body).toMatchObject({
+            "_id": otraResConOtroUsuario.body._id,
+            "siguiendo": [
+                {
+                    "_id": resBase.body._id,
+                    "nombre": "Test",
+                    "apellidos": "Testing",
+                    "foto": "http://blank.page",
+                },
+            ],
         })
         expect(res.statusCode).toEqual(200);
     });

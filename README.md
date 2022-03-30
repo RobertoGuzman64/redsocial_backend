@@ -13,11 +13,15 @@
   - [x] '/:id' traerUsuarioId
     - [x] Test
 
-  - [x] '/siguiendo' traerUsuariosQueSigues
+  - [x] '/:id/siguiendo' traerUsuariosQueSigues
     - [ ] Test
+      - [x] Test si funciona
+      - [ ] Test de errores
 
-  - [x] '/siguiendo' traerUsuariosQueTeSiguen
+  - [x] '/:id/seguidores' traerUsuariosQueTeSiguen
     - [ ] Test
+      - [ ] Test si funciona
+      - [ ] Test de errores
 
 - [ ] POST
   - [x] '/' crearUsuario
@@ -26,7 +30,7 @@
   - [x] '/login' loginUsuario
     - [x] Test
 
-  - [x] '/siguiendo' sigueUsuario
+  - [x] '/:id/siguiendo' sigueUsuario
     - [ ] Test
       - [x] Test si funciona
       - [ ] Test de errores
@@ -37,6 +41,8 @@
   
   - [x] '/:id' cambiaClavedeUsuario
     - [ ] Test
+      - [ ] Test si funciona
+      - [ ] Test de errores
   
 
 - [ ] DELETE
@@ -45,26 +51,38 @@
 
   - [x] '/siguiendo' sigueUsuario
     - [ ] Test
+      - [ ] Test si funciona
+      - [ ] Test de errores
   
 ## Post
 - [ ] GET
   - [x] '/' traerPosts
     - [ ] Test
+      - [ ] Test si funciona
+      - [ ] Test de errores
   
   - [x] '/:id' traerPostId
     - [ ] Test
+      - [ ] Test si funciona
+      - [ ] Test de errores
 
 - [ ] POST
   - [x] '/' crearPost
     - [ ] Test
+      - [ ] Test si funciona
+      - [ ] Test de errores
 
 - [ ] PUT/PATCH
   - [x] '/:id' cambiaPost
     - [ ] Test
+      - [ ] Test si funciona
+      - [ ] Test de errores
 
 - [ ] DELETE
   - [x] '/:id' borrarPostId
     - [ ] Test
+      - [ ] Test si funciona
+      - [ ] Test de errores
 
 ## Extra
 ### Usuario
