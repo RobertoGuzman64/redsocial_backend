@@ -2,6 +2,7 @@ const UsuarioModel = require('../models/usuario.js');
 const bcrypt = require("bcrypt");
 const authConfig = require('../config/auth.js');
 const jwt = require('jsonwebtoken');
+const { db } = require('../models/usuario.js');
 
 // Clase Usuario donde contiene todos los metodos(funciones de clases llaman metodos).
 
@@ -34,7 +35,7 @@ class Usuario {
     async traerUsuariosQueSigues(id) {
         let usuario = await UsuarioModel.findById(id).select('siguiendo').then(siguiendo => {
             return { status: 200, datos: siguiendo };
-        }).catch(error=> {
+        }).catch(error => {
             return { status: 404, datos: error };
         });
         return usuario;
@@ -43,7 +44,7 @@ class Usuario {
     async traerUsuariosQueTeSiguen(id) {
         let usuario = await UsuarioModel.findById(id).select('seguidores').then(seguidores => {
             return { status: 200, datos: seguidores };
-        }).catch(error=> {
+        }).catch(error => {
             return { status: 404, datos: error };
         });
         return usuario;
@@ -230,7 +231,34 @@ class Usuario {
     }
     // Funcion de seguir a un usuario
     async seguirUsuario(id, body) {
-        let usuarioSeguido = await UsuarioModel.findByIdAndUpdate(id, { $push: { siguiendo: body } }, { new: true }).then(usuario => {
+        console.log('body')
+        if (!body.usuario || !body.siguiendo) {
+            return {
+                status: 422,
+                datos: {
+                    error: 'Para seguir un usuario necesita pasar el usuario que quieres seguir y el usuario que va ser seguido. Mire el detalle del error para un ejemplo.',
+                    detalle: {
+                        body: {
+                            usuario: {
+                                _id: 'id tuyo',
+                                nombre: 'nombre tuyo',
+                                apellidos: 'apellido tuyo o null',
+                                foto: 'foto tuya o null'
+                            },
+                            siguiendo: {
+                                _id: 'id de quien quieres seguir',
+                                nombre: 'nombre de quien quieres seguir',
+                                apellidos: 'apellido de quien quieres seguir o null',
+                                foto: 'foto de quien quieres seguir o null'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        const session = await db.startSession();
+        session.startTransaction();
+        let usuario = await UsuarioModel.findByIdAndUpdate(id, { $push: { siguiendo: body.siguiendo } }, { new: true, session: session }).then(usuario => {
             return {
                 status: 200,
                 datos: {
@@ -245,7 +273,21 @@ class Usuario {
                 }
             }
         })
-        return usuarioSeguido;
+        let siguiendo = await UsuarioModel.findByIdAndUpdate(body.siguiendo._id, { $push: { seguidores: body.usuario } }, { new: true, session: session }).then(usuarioSeguido => {
+            console.log(usuarioSeguido)
+            return { status: 200 }
+        }).catch(error => {
+            console.log(error)
+            return { status: 400 }
+        });
+        if (usuario.status === 200 && siguiendo.status === 200) {
+            console.log('yay')
+            await session.commitTransaction();
+        } else {
+            console.log('bruh')
+            await session.abortTransaction();
+        }
+        return usuario;
     }
     // Funcion de dejar de seguir a un usuario
     async dejarDeSeguirUsuario(id, body) {
