@@ -193,15 +193,49 @@ describe('POST endpoint "/login"', () => {
     });
 });
 
-describe('GET endpoint "/"', () => {
-    test('MOSTRA todos los usuarios de la base de datos y retorna 200', async () => {
+describe('POST endpoint "/siguiendo"', () => {
+    test('AÑADE un nuevo usuario a tu lista de usuarios que sigues y retorna 200', async () => {
         let usuario = {
             nombre: 'Test',
             edad: '2002-08-17T07:32:37.341Z',
             correo: 'test2@mail.com',
             clave: '1234',
         }
-        await request(app).post(URLBase).send(usuario);
+        let otroUsuario = await request(app).post(URLBase).send(usuario);
+        let datos = {
+            _id: resBase.body._id,
+            nombre: resBase.body.nombre,
+            apellidos: resBase.body.apellidos,
+            foto: resBase.body.foto
+        }
+        let res = await request(app).post(`${URLBase}/${otroUsuario.body._id}/siguiendo`).send(datos);
+        expect(res.body).toMatchObject({
+            usuario: {
+                _id: otroUsuario.body._id,
+                nombre: 'Test',
+                edad: '2002-08-17T07:32:37.341Z',
+                correo: 'test2@mail.com',
+                esAdministrador: false,
+                siguiendo: [
+                    {
+                        "_id": resBase.body._id,
+                        "apellidos": "Testing",
+                        "foto": "http://blank.page",
+                        "nombre": "Test",
+                    },
+                ],
+                seguidores: [],
+                publicaciones: [],
+                likes: [],
+                __v: 0
+            }
+        });
+        expect(res.statusCode).toEqual(200);
+    })
+})
+
+describe('GET endpoint "/"', () => {
+    test('MUESTRA todos los usuarios de la base de datos y retorna 200', async () => {
         const res = await request(app).get(URLBase)
         expect(res.body).toMatchObject([
             {
@@ -222,21 +256,28 @@ describe('GET endpoint "/"', () => {
             }, {
                 "__v": 0,
                 "_id": res.body[1]._id,
-                "nombre": usuario.nombre,
-                "edad": usuario.edad,
-                "correo": usuario.correo,
+                "nombre": 'Test',
+                "edad": '2002-08-17T07:32:37.341Z',
+                "correo": 'test2@mail.com',
                 "esAdministrador": false,
                 "likes": [],
                 "publicaciones": [],
                 "seguidores": [],
-                "siguiendo": []
+                "siguiendo": [
+                    {
+                        "_id": resBase.body._id,
+                        "apellidos": "Testing",
+                        "foto": "http://blank.page",
+                        "nombre": "Test",
+                    },
+                ]
             }])
         expect(res.statusCode).toEqual(200);
     });
 });
 
 describe('GET endpoint "/:id"', () => {
-    test('MOSTRA el usuario del id pasado y retorna 200', async () => {
+    test('MUESTRA el usuario del id pasado y retorna 200', async () => {
         const res = await request(app).get(`${URLBase}/${resBase.body._id}`)
         expect(res.body).toMatchObject({
             "__v": resBase.body.__v,
@@ -256,7 +297,7 @@ describe('GET endpoint "/:id"', () => {
         })
         expect(res.statusCode).toEqual(200);
     });
-    test('NO mostra el usuario del id pasado porque el id no es valido y retorna 404', async () => {
+    test('NO muestra el usuario del id pasado porque el id no es valido y retorna 404', async () => {
         const res = await request(app).get(`${URLBase}/idInvalido`)
 
         expect(res.body).toMatchObject({ "error": "Cast to ObjectId failed for value \"idInvalido\" (type string) at path \"_id\" for model \"Usuario\"" })

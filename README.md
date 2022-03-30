@@ -28,6 +28,8 @@
 
   - [x] '/siguiendo' sigueUsuario
     - [ ] Test
+      - [x] Test si funciona
+      - [ ] Test de errores
 
 - [ ] PUT/PATCH
   - [x] '/:id' cambiaUsuario
@@ -39,7 +41,7 @@
 
 - [ ] DELETE
   - [x] '/:id' borrarUsuarioId
-    - [ ] Test
+    - [x] Test
 
   - [x] '/siguiendo' sigueUsuario
     - [ ] Test
