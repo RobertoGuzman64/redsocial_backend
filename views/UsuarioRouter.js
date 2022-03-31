@@ -68,7 +68,7 @@ router.get("/", async (req, res) => {
 
 // GET
 // Endpoint de mostrar los Usuarios que sigues.
-// http://localhost:5500/usuarios/siguiendo
+// http://localhost:5500/usuarios/:id/siguiendo
 
 router.get("/:id/siguiendo", async (req, res) => {
     try {
@@ -84,7 +84,7 @@ router.get("/:id/siguiendo", async (req, res) => {
 
 // GET
 // Endpoint de motrar los Usuarios que te siguen.
-// http://localhost:5500/usuarios/siguiendo
+// http://localhost:5500/usuarios/:id/seguidores
 
 router.get("/:id/seguidores", async (req, res) => {
     try {
@@ -181,12 +181,13 @@ router.delete("/:id", async (req, res) => {
 
 // DELETE
 // Endpoint de dejar de seguir a un Usuario.
-// http://localhost:5500/usuarios/siguiendo
+// http://localhost:5500/usuarios/:id/siguiendo/:pk
 
-router.delete("/siguiendo", async (req, res) => {
+router.delete("/:id/siguiendo/:pk", async (req, res) => {
     try {
-        const body = req.body;
-        let respuesta = await UsuarioController.dejarDeSeguirUsuario(body);
+        const id = req.params.id;
+        const pk = req.params.pk;
+        let respuesta = await UsuarioController.dejarDeSeguirUsuario(id, pk);
         res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
@@ -194,6 +195,5 @@ router.delete("/siguiendo", async (req, res) => {
         });
     }
 });
-
 
 module.exports = router;

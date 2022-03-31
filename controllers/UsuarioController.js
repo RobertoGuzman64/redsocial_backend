@@ -231,7 +231,6 @@ class Usuario {
     }
     // Funcion de seguir a un usuario
     async seguirUsuario(id, body) {
-        console.log('body')
         if (!body.usuario || !body.siguiendo) {
             return {
                 status: 422,
@@ -256,8 +255,10 @@ class Usuario {
                 }
             }
         }
+
         const session = await db.startSession();
         session.startTransaction();
+
         let usuario = await UsuarioModel.findByIdAndUpdate(id, { $push: { siguiendo: body.siguiendo } }, { new: true, session: session }).then(usuario => {
             return {
                 status: 200,
@@ -273,40 +274,62 @@ class Usuario {
                 }
             }
         })
+
         let siguiendo = await UsuarioModel.findByIdAndUpdate(body.siguiendo._id, { $push: { seguidores: body.usuario } }, { new: true, session: session }).then(usuarioSeguido => {
-            console.log(usuarioSeguido)
             return { status: 200 }
         }).catch(error => {
-            console.log(error)
             return { status: 400 }
         });
+
         if (usuario.status === 200 && siguiendo.status === 200) {
-            console.log('yay')
             await session.commitTransaction();
         } else {
-            console.log('bruh')
             await session.abortTransaction();
         }
         return usuario;
     }
     // Funcion de dejar de seguir a un usuario
-    async dejarDeSeguirUsuario(id, body) {
-        let usuarioDejado = await UsuarioModel.findByIdAndUpdate(id, { $pull: { siguiendo: body.siguiendo } }, { new: true }).then(usuario => {
-            return {
-                status: 200,
-                datos: {
-                    usuario: usuario
+    async dejarDeSeguirUsuario(id_usuario, id_por_borrar) {
+        const session = await db.startSession();
+        session.startTransaction();
+
+        let usuario = await UsuarioModel
+            .findByIdAndUpdate(
+                id_usuario,
+                { $pull: { siguiendo: { _id: id_por_borrar } } },
+                { new: true, session: session }
+            ).then(usuario => {
+                return {
+                    status: 200,
+                    datos: {
+                        usuario: usuario
+                    }
                 }
-            }
-        }).catch(error => {
-            return {
-                status: 404,
-                datos: {
-                    error: error.message
+            }).catch(error => {
+                return {
+                    status: 404,
+                    datos: {
+                        error: error.message
+                    }
                 }
-            }
-        })
-        return usuarioDejado;
+            });
+
+        let antiguoSeguido = await UsuarioModel
+            .findByIdAndUpdate(
+                id_por_borrar,
+                { $pull: { seguidores: { _id: id_usuario } } },
+                { new: true, session: session }
+            ).then(antiguo => {
+                return { status: 200 }
+            }).catch(error => { return { status: 400 } });
+
+        if (usuario.status === 200 && antiguoSeguido.status === 200) {
+            await session.commitTransaction();
+        } else {
+            await session.abortTransaction();
+        }
+
+        return usuario;
     }
 }
 
