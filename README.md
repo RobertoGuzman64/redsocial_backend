@@ -1,66 +1,82 @@
-# Endpoints:
 
+# TODO
+## Endpoints:
 
+### Middlewares
 - [ ] Middlewares
   - [ ] Auth
   - [ ] Admin
 
-## Usuario
+### Usuario
+
 - [ ] GET
-  - [x] '/' traerUsuarios
-    - [x] Test
+  - [x] GET CON LOS TESTS BASICOS
+  - [ ] GET CON TODOS LOS TESTS
+    - [x] '/' traerUsuarios
+      - [x] Test
 
-  - [x] '/:id' traerUsuarioId
-    - [x] Test
+    - [x] '/:id' traerUsuarioId
+      - [x] Test
 
-  - [x] '/:id/siguiendo' traerUsuariosQueSigues
-    - [ ] Test
-      - [x] Test si funciona
-      - [ ] Test de errores
+    - [x] '/:id/siguiendo' traerUsuariosQueSigues
+      - [ ] Test
+        - [x] Test si funciona
+        - [ ] Test de errores
 
-  - [x] '/:id/seguidores' traerUsuariosQueTeSiguen
-    - [ ] Test
-      - [ ] Test si funciona
-      - [ ] Test de errores
+    - [x] '/:id/seguidores' traerUsuariosQueTeSiguen
+      - [ ] Test
+        - [x] Test si funciona
+        - [ ] Test de errores
 
 - [ ] POST
-  - [x] '/' crearUsuario
-    - [x] Test
- 
-  - [x] '/login' loginUsuario
-    - [x] Test
+  - [x] POST CON LOS TESTS BASICOS
+  - [ ] POST CON TODOS LOS TESTS
+    - [x] '/' crearUsuario
+      - [x] Test
+   
+    - [x] '/login' loginUsuario
+      - [x] Test
 
-  - [x] '/:id/siguiendo' sigueUsuario
-    - [ ] Test
-      - [x] Test si funciona
-      - [ ] Test de errores
+    - [x] '/:id/siguiendo' sigueUsuario
+      - [ ] Test
+        - [x] Test si funciona
+        - [ ] Test de errores
 
 - [ ] PUT/PATCH
-  - [x] '/:id' cambiaUsuario
-    - [x] Test
-  
-  - [x] '/:id' cambiaClavedeUsuario
-    - [ ] Test
-      - [ ] Test si funciona
-      - [ ] Test de errores
-  
+  - [ ] PUT/PATCH CON LOS TESTS BASICOS
+  - [ ] PUT/PATCH CON TODOS LOS TESTS
+    - [x] '/:id' cambiaUsuario
+      - [ ] Test
+      <!-- TODO: Checkear si cuando se cambia el usuario se cambia las mensiones de el en los otros usuarios  (Creo que es con el Query Update multi https://mongoosejs.com/docs/api.html#query_Query-update)-->
+        - [x] Test si funciona
+        - [ ] Test de errores
+          - [x] Test de errores basico
+          - [ ] Test de errores avanzado
+
+    - [x] '/:id' cambiaClavedeUsuario
+      - [ ] Test
+        - [ ] Test si funciona
+        - [ ] Test de errores
 
 - [ ] DELETE
-  - [x] '/:id' borrarUsuarioId
-    - [x] Test
+  - [x] DELETE CON LOS TESTS BASICOS
+  - [ ] DELETE CON TODOS LOS TESTS
+    - [x] '/:id' borrarUsuarioId
+      <!-- TODO: Checkear si cuando se borra el usuario se borra las mensiones de el en los otros usuarios -->
+      - [x] Test
 
-  - [x] '/siguiendo' sigueUsuario
-    - [ ] Test
-      - [ ] Test si funciona
-      - [ ] Test de errores
-  
-## Post
+    - [x] '/siguiendo' sigueUsuario
+      - [ ] Test
+        - [x] Test si funciona
+        - [ ] Test de errores
+
+### Post
 - [ ] GET
   - [x] '/' traerPosts
     - [ ] Test
       - [ ] Test si funciona
       - [ ] Test de errores
-  
+
   - [x] '/:id' traerPostId
     - [ ] Test
       - [ ] Test si funciona
@@ -84,7 +100,7 @@
       - [ ] Test si funciona
       - [ ] Test de errores
 
-## Extra
+## Extra Endpoints
 ### Usuario
 
 - [ ] GET
@@ -100,4 +116,3 @@
 - [ ] GET
   - [ ] '/busqueda' traerPostPorTituloDataOEdad (query param) (?titulo=Titulo) (?data=DDMMYYYY) (?edad=adulto(bool))
     - [ ] Test
-

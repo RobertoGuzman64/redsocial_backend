@@ -360,7 +360,6 @@ describe('GET endpoint "/:id/siguiendo"', () => {
 describe('GET endpoint "/:id/seguidores"', () => {
     test('MUESTRA el usuario del id pasado y retorna 200', async () => {
         const res = await request(app).get(`${URLBase}/${resBase.body._id}/seguidores`)
-        console.log(res.body)
         expect(res.body).toMatchObject({
             "_id": resBase.body._id,
             "seguidores": [
@@ -393,8 +392,9 @@ describe('PATCH endpoint "/:id"', () => {
             "nombre": "Test2",
             "likes": [{ id: '1', postId: '1' }],
             "publicaciones": [{ postId: '1' }],
-            "seguidores": [{ id: '1' }],
-            "siguiendo": [{ id: '1' }],
+            // TODO: Impedir que el seguidores y el siguiendo se pueda cambiar en el patch.
+            //"seguidores": [{ id: '1' }],
+            //"siguiendo": [{ id: '1' }],
             "telefono": "+34123456799",
         }
         const res = await request(app).patch(`${URLBase}/${resBase.body._id}`).send(datos)
@@ -411,8 +411,8 @@ describe('PATCH endpoint "/:id"', () => {
                 "nombre": datos.nombre,
                 "likes": datos.likes,
                 "publicaciones": datos.publicaciones,
-                "seguidores": datos.seguidores,
-                "siguiendo": datos.siguiendo,
+                // "seguidores": datos.seguidores,
+                // "siguiendo": datos.siguiendo,
                 "telefono": datos.telefono,
             }
         })
@@ -468,6 +468,61 @@ describe('PATCH endpoint "/:id"', () => {
         expect(res.statusCode).toEqual(404);
     });
 })
+
+describe('DELETE endpoint "/:id/siguiendo/:pk"', () => {
+    test('BORRA de la lista de siguiendo el usuario que el usuario del id pasado ha pasado en el segundo param y retorna 200', async () => {
+        const res = await request(app).delete(`${URLBase}/${otraResConOtroUsuario.body._id}/siguiendo/${resBase.body._id}`)
+        expect(res.body).toMatchObject({
+            usuario: {
+                _id: otraResConOtroUsuario.body._id,
+                nombre: 'Test',
+                edad: '2002-08-17T07:32:37.341Z',
+                correo: 'test2@mail.com',
+                esAdministrador: false,
+                siguiendo: [],
+                seguidores: [],
+                publicaciones: [],
+                likes: [],
+                __v: 0
+            }
+        })
+        expect(res.statusCode).toEqual(200);
+
+        const res2 = await request(app).get(`${URLBase}/${resBase.body._id}`)
+        expect(res2.body).toMatchObject({
+            "__v": 0,
+            "_id": resBase.body._id,
+            "apellidos": "Test",
+            "ciudad": "aqui",
+            "correo": "test1@mail.com",
+            "edad": "2002-09-17T07:32:37.341Z",
+            "esAdministrador": true,
+            "foto": "http://github.com",
+            "likes": [
+                {
+                    "id": "1",
+                    "postId": "1",
+                },
+            ],
+            "nombre": "Test2",
+            "publicaciones": [
+                {
+                    "postId": "1",
+                },
+            ],
+            "seguidores": [],
+            "siguiendo": [],
+            "telefono": "+34123456799",
+        })
+        expect(res2.statusCode).toEqual(200);
+    });
+    test('NO borra el usuario del id pasado porque el id no es valido y retorna 404', async () => {
+        const res = await request(app).delete(`${URLBase}/idInvalido/siguiendo/idInvalido`)
+
+        expect(res.body).toMatchObject({ "error": "Cast to ObjectId failed for value \"idInvalido\" (type string) at path \"_id\" for model \"Usuario\"" })
+        expect(res.statusCode).toEqual(404);
+    });
+});
 
 describe('DELETE endpoint "/:id"', () => {
     test('BORRA el usuario del id pasado y retorna 200', async () => {
