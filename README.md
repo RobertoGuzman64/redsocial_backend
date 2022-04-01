@@ -70,7 +70,7 @@
         - [x] Test si funciona
         - [ ] Test de errores
 
-### Post
+### Hilo
 - [ ] GET
   - [x] '/' traerPosts
     - [ ] Test
@@ -120,7 +120,7 @@
   - [ ] '/:id/likes' traerLikesDeUnUsuario
     - [ ] Test
 
-### Post
+### Hilo
 
 - [ ] GET
   - [ ] '/busqueda' traerPostPorTituloDataOEdad (query param) (?titulo=Titulo) (?data=DDMMYYYY) (?edad=adulto(bool))
