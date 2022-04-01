@@ -254,46 +254,27 @@ describe('POST endpoint "/:id/siguiendo"', () => {
 describe('GET endpoint "/"', () => {
     test('MUESTRA todos los usuarios de la base de datos y retorna 200', async () => {
         const res = await request(app).get(URLBase)
-        expect(res.body).toMatchObject([
-            {
-                "__v": 0,
-                "_id": resBase.body._id,
-                "nombre": usuarioBase.nombre,
-                "apellidos": usuarioBase.apellidos,
-                "telefono": usuarioBase.telefono,
-                "ciudad": usuarioBase.ciudad,
-                "correo": usuarioBase.correo,
-                "edad": usuarioBase.edad,
-                "esAdministrador": resBase.body.esAdministrador,
-                "foto": usuarioBase.foto,
-                "likes": [],
-                "publicaciones": [],
-                "seguidores": [
-                    {
-                        "_id": res.body[1]._id,
-                        "nombre": "Test",
-                    },
-                ],
-                "siguiendo": []
-            }, {
-                "__v": 0,
-                "_id": res.body[1]._id,
-                "nombre": 'Test',
-                "edad": '2002-08-17T07:32:37.341Z',
-                "correo": 'test2@mail.com',
-                "esAdministrador": false,
-                "likes": [],
-                "publicaciones": [],
-                "seguidores": [],
-                "siguiendo": [
-                    {
-                        "_id": resBase.body._id,
-                        "apellidos": "Testing",
-                        "foto": "http://blank.page",
-                        "nombre": "Test",
-                    },
-                ]
-            }])
+        expect(res.body).toHaveProperty('[][0].publicaciones');
+        expect(res.body).toHaveProperty('[][1].nombre');
+        expect(res.body).toHaveProperty('[][2]', {
+            "__v": 0,
+            "_id": otraResConOtroUsuario.body._id,
+            "nombre": 'Test',
+            "edad": '2002-08-17T07:32:37.341Z',
+            "correo": 'test2@mail.com',
+            "esAdministrador": false,
+            "likes": [],
+            "publicaciones": [],
+            "seguidores": [],
+            "siguiendo": [
+                {
+                    "_id": resBase.body._id,
+                    "apellidos": "Testing",
+                    "foto": "http://blank.page",
+                    "nombre": "Test",
+                },
+            ]
+        });
         expect(res.statusCode).toEqual(200);
     });
 });
@@ -417,7 +398,7 @@ describe('PATCH endpoint "/:id"', () => {
             }
         })
         expect(res.statusCode).toEqual(200);
-        resBase = {body: res.body.usuario}
+        resBase = { body: res.body.usuario }
     })
 
     test('NO cambia la clave del usuario con el id pasado y retorna 200', async () => {
@@ -478,7 +459,7 @@ describe('PATCH endpoint "/:id/cambiar-clave"', () => {
         }
         const res = await request(app).patch(`${URLBase}/${resBase.body._id}/cambiar-clave`).send(datos)
         expect(res.body).toMatchObject({
-            message: "Clave cambiada con sucesso"
+            mensaje: "Clave cambiada con sucesso"
         })
         expect(res.statusCode).toEqual(200);
 
