@@ -85,9 +85,9 @@
 - [ ] POST
   - [x] '/' crearPost
     - [ ] Test
-      - [ ] Test si funciona
+      - [x] Test si funciona
       - [ ] Test de errores
-  
+
   - [ ] '/:id/like' gustaDelPost
     - [ ] Test
       - [ ] Test si funciona
