@@ -417,6 +417,7 @@ describe('PATCH endpoint "/:id"', () => {
             }
         })
         expect(res.statusCode).toEqual(200);
+        resBase = {body: res.body.usuario}
     })
 
     test('NO cambia la clave del usuario con el id pasado y retorna 200', async () => {
@@ -467,6 +468,41 @@ describe('PATCH endpoint "/:id"', () => {
         expect(res.body).toMatchObject({ "error": "Cast to ObjectId failed for value \"idInvalido\" (type string) at path \"_id\" for model \"Usuario\"" })
         expect(res.statusCode).toEqual(404);
     });
+})
+
+describe('PATCH endpoint "/:id/cambiar-clave"', () => {
+    test('CAMBIA los datos del usuario con el id pasado y retorna 200', async () => {
+        let datos = {
+            "clave": "1234",
+            "claveNueva": "12345",
+        }
+        const res = await request(app).patch(`${URLBase}/${resBase.body._id}/cambiar-clave`).send(datos)
+        expect(res.body).toMatchObject({
+            message: "Clave cambiada con sucesso"
+        })
+        expect(res.statusCode).toEqual(200);
+
+        const res2 = await request(app).post(`${URLBase}/login`).send({ correo: resBase.body.correo, clave: datos.claveNueva });
+        expect(res2.body).toMatchObject({
+            usuario: {
+                "__v": 0,
+                "_id": resBase.body._id,
+                "apellidos": resBase.body.apellidos,
+                "ciudad": resBase.body.ciudad,
+                "correo": resBase.body.correo,
+                "edad": resBase.body.edad,
+                "esAdministrador": resBase.body.esAdministrador,
+                "foto": resBase.body.foto,
+                "nombre": resBase.body.nombre,
+                "likes": resBase.body.likes,
+                "publicaciones": resBase.body.publicaciones,
+                "seguidores": resBase.body.seguidores,
+                "siguiendo": resBase.body.siguiendo,
+                "telefono": resBase.body.telefono,
+            }
+        })
+        expect(res2.statusCode).toEqual(200);
+    })
 })
 
 describe('DELETE endpoint "/:id/siguiendo/:pk"', () => {

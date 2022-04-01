@@ -43,7 +43,7 @@
         - [ ] Test de errores
 
 - [ ] PUT/PATCH
-  - [ ] PUT/PATCH CON LOS TESTS BASICOS
+  - [x] PUT/PATCH CON LOS TESTS BASICOS
   - [ ] PUT/PATCH CON TODOS LOS TESTS
     - [x] '/:id' cambiaUsuario
       - [ ] Test
@@ -55,7 +55,7 @@
 
     - [x] '/:id' cambiaClavedeUsuario
       - [ ] Test
-        - [ ] Test si funciona
+        - [x] Test si funciona
         - [ ] Test de errores
 
 - [ ] DELETE
@@ -87,6 +87,11 @@
     - [ ] Test
       - [ ] Test si funciona
       - [ ] Test de errores
+  
+  - [ ] '/:id/like' gustaDelPost
+    - [ ] Test
+      - [ ] Test si funciona
+      - [ ] Test de errores 
 
 - [ ] PUT/PATCH
   - [x] '/:id' cambiaPost
@@ -109,6 +114,10 @@
 
 - [ ] GET
   - [ ] '/:id/posts' traerPostsDeUnUsuario
+    - [ ] Test
+
+- [ ] GET
+  - [ ] '/:id/likes' traerLikesDeUnUsuario
     - [ ] Test
 
 ### Post
