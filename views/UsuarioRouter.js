@@ -149,8 +149,8 @@ router.patch("/:id", async (req, res) => {
 
 // PATCH
 // Endpoint de Modificar la contraseña por ID.
-// http://localhost:5500/usuarios/:id
-router.patch("/:id", async (req, res) => {
+// http://localhost:5500/usuarios/:id/cambiar-clave
+router.patch("/:id/cambiar-clave", async (req, res) => {
     try {
         const id = req.params.id;
         const body = req.body;

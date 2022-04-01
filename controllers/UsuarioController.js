@@ -162,9 +162,27 @@ class Usuario {
         }
     }
     // Funcion de cambiar clave
-    async cambiarClave(id, body) {
+    async cambiaClaveUsuario(id, body) {
         let clave = body.clave;
         let claveNueva = body.claveNueva;
+
+        if (!body.clave) {
+            return {
+                status: 422,
+                datos: {
+                    error: 'Para cambiar la clave necesita de pasar la clave actual.',
+                }
+            }
+        }
+        if (!body.claveNueva) {
+            return {
+                status: 422,
+                datos: {
+                    error: 'Para cambiar la clave necesita de pasar la nueva clave.',
+                }
+            }
+        }
+
         let usuarioEncontrado = await UsuarioModel.findById(id).then(usuario => {
             if (!usuario) {
                 return {
@@ -176,11 +194,11 @@ class Usuario {
             } else {
                 if (bcrypt.compareSync(clave, usuario.clave)) {
                     let claveNuevaHash = bcrypt.hashSync(claveNueva, Number.parseInt(authConfig.rondas));
-                    let usuarioCambiado = UsuarioModel.findByIdAndUpdate(id, { clave: claveNuevaHash }, { new: true }).then(actualizado => {
+                    let usuarioCambiado = UsuarioModel.findByIdAndUpdate(id, { $set: { clave: claveNuevaHash } }).then(actualizado => {
                         return {
                             status: 200,
                             datos: {
-                                usuario: actualizado
+                                mensaje: "Clave cambiada con sucesso"
                             }
                         }
                     }).catch(error => {
