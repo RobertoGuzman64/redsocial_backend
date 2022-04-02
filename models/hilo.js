@@ -15,10 +15,22 @@ const hiloSchema = new Schema ({
         type: Date,
         required: true
     },
-    usuarioId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Usuario',
-        required: true
+    usuario: {
+        usuarioId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Usuario',
+            required: true
+        },
+        nombre: {
+            type: String,
+            required: true
+        },
+        apellidos: {
+            type: String
+        },
+        foto: {
+            type: String
+        }
     },
     comentarios: {
         type: Array
