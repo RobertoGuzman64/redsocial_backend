@@ -170,7 +170,7 @@ router.patch("/:id/cambiar-clave", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
         const id = req.params.id;
-        let respuesta = await UsuarioController.borrarUsuario(id)
+        let respuesta = await UsuarioController.borrarUsuario(id);
         res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({

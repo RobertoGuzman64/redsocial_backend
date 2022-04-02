@@ -106,7 +106,7 @@ describe('POST endpoint "/"', () => {
             likes: []
         });
         expect(res.statusCode).toEqual(200);
-        resUsuarioBase = {body: res.body};
+        resUsuarioBase = { body: res.body };
     });
 });
 
@@ -151,7 +151,7 @@ describe('GET endpoint "/:id"', () => {
 describe('PATCH endpoint "/:id"', () => {
     test('MODIFICA un hilo de la base de datos y retorna 200', async () => {
         const res = await request(app).patch(`${URLBase}/${resHiloBase.body[0]._id}`)
-            .send({titulo: 'Modificado'});
+            .send({ titulo: 'Modificado' });
         expect(res.body).toMatchObject({
             "__v": 0,
             "_id": resHiloBase.body[0]._id,
@@ -166,5 +166,12 @@ describe('PATCH endpoint "/:id"', () => {
     });
 })
 
-// describe('DELETE endpoint "/:id"', () => {
-// });
+describe('DELETE endpoint "/:id"', () => {
+    test('BORRA un hilo de la base de datos y retorna 200', async () => {
+        const res = await request(app).delete(`${URLBase}/${resHiloBase.body[0]._id}`);
+        expect(res.body).toMatchObject({
+            "hilo": "Hilo con el titulo Modificado ha sido borrado con suceso"
+        });
+        expect(res.statusCode).toEqual(200);
+    });
+});
