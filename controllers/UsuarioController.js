@@ -301,8 +301,10 @@ class Usuario {
 
         if (usuario.status === 200 && siguiendo.status === 200) {
             await session.commitTransaction();
+            session.endSession();
         } else {
             await session.abortTransaction();
+            session.endSession();
         }
         return usuario;
     }
@@ -343,8 +345,10 @@ class Usuario {
 
         if (usuario.status === 200 && antiguoSeguido.status === 200) {
             await session.commitTransaction();
+            session.endSession();
         } else {
             await session.abortTransaction();
+            session.endSession();
         }
 
         return usuario;
