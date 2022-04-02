@@ -24,7 +24,7 @@ const hiloSchema = new Schema ({
         type: Array
     },
     likes: {
-        type: Number
+        type: Array
     },
 })
 

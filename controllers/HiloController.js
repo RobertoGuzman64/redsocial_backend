@@ -1,4 +1,5 @@
 const HiloModel = require('../models/hilo.js');
+const UsuarioModel = require('../models/usuario.js');
 const authConfig = require('../config/auth.js');
 const jwt = require('jsonwebtoken');
 
@@ -6,6 +7,32 @@ const jwt = require('jsonwebtoken');
 
 class Hilo {
     constructor() {
+    }
+
+    // Función de crear un Hilo.
+    async crearHilo(body) {
+        const session = await HiloModel.startSession();
+        session.startTransaction();
+
+        let hiloNuevo = await HiloModel.create([body], { session: session }).then(hiloNuevo => {
+            return { status: 201, datos: hiloNuevo }
+        }).catch(error => {
+            return { status: 400, datos: { error: error.message } }
+        });
+        
+        let duenoDelHilo = await UsuarioModel.findByIdAndUpdate(body.usuarioId, { $push: { publicaciones: hiloNuevo.datos } }, { new: true, session: session }).then(dueno => {
+            return { status: 200, usuario: dueno }
+        }).catch(error => {
+            return { status: 400 }
+        })
+        if (hiloNuevo.status === 201 && duenoDelHilo.status === 200) {
+            await session.commitTransaction();
+            session.endSession();
+        } else {
+            await session.abortTransaction();
+            session.endSession();
+        }
+        return hiloNuevo;
     }
 
     // Función mostrar todos los Hilos.
@@ -26,16 +53,6 @@ class Hilo {
             return { status: 404, datos: { error: error.message } }
         });
         return hiloEncontrado;
-    }
-
-    // Función de crear un Hilo.
-    async crearHilo(body) {
-        let hiloNuevo = await HiloModel.create(body).then(hiloNuevo => {
-            return { status: 200, datos: hiloNuevo }
-        }).catch(error => {
-            return { status: 400, datos: { error: error.message } }
-        });
-        return hiloNuevo;
     }
 
     // Función de actualizar un Hilo.
@@ -66,13 +83,7 @@ class Hilo {
             }
         });
     }
-
-
-
-
-
 }
-
 
 let HiloController = new Hilo();
 module.exports = HiloController;

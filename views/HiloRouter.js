@@ -2,6 +2,22 @@ const router = require("express").Router();
 
 const HiloController = require('../controllers/HiloController');
 
+// POST
+// Endpoint de crear un Hilo.
+// http://localhost:5500/hilos
+
+router.post("/", async (req, res) => {
+    try {
+        const body = req.body;
+        let respuesta = await HiloController.crearHilo(body);
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message
+        });
+    }
+});
+
 // GET 
 // Endpoint de mostrar Todos los Hilos.
 // http://localhost:5500/
@@ -28,22 +44,6 @@ router.get("/:id", async (req, res) => {
         res.status(respuesta.status).json(respuesta.datos);
     } catch (error) {
         return res.status(500).json({
-            message: error.message
-        });
-    }
-});
-
-// POST
-// Endpoint de crear un Hilo.
-// http://localhost:5500/hilos
-
-router.post("/", async (req, res) => {
-    try {
-        const body = req.body;
-        let respuesta = await HiloController.crearHilo(body);
-        res.status(respuesta.status).json(respuesta.datos);
-    } catch (error) {
-        return res.status(400).json({
             message: error.message
         });
     }
@@ -81,9 +81,5 @@ router.delete("/:id", async (req, res) => {
         });
     }
 });
-
-
-
-
 
 module.exports = router;
