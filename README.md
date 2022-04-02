@@ -42,6 +42,11 @@
         - [x] Test si funciona
         - [ ] Test de errores
 
+    - [x] '/:id/like/pk' gustaDelPost
+      - [ ] Test
+        - [x] Test si funciona
+        - [ ] Test de errores 
+
 - [ ] PUT/PATCH
   - [x] PUT/PATCH CON LOS TESTS BASICOS
   - [ ] PUT/PATCH CON TODOS LOS TESTS
@@ -87,11 +92,6 @@
     - [ ] Test
       - [x] Test si funciona
       - [ ] Test de errores
-
-  - [ ] '/:id/like' gustaDelPost
-    - [ ] Test
-      - [ ] Test si funciona
-      - [ ] Test de errores 
 
 - [ ] PUT/PATCH
   - [x] '/:id' cambiaPost

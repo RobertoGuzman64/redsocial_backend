@@ -51,6 +51,23 @@ router.post("/:id/siguiendo", async (req, res) => {
     }
 });
 
+// POST
+// Endpoint de Dar un Like a un Hilo.
+// http://localhost:5500/usuarios/:id/like/:pk
+
+router.post("/:id/like/:pk", async (req, res) => {
+    try {
+        const usuarioId = req.params.id;
+        const hiloId = req.params.pk;
+        let respuesta = await UsuarioController.postGustaDeUnHilo(usuarioId, hiloId);
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
 // GET
 // Endpoint de mostrar Todos los Usuarios.
 // http://localhost:5500/usuarios

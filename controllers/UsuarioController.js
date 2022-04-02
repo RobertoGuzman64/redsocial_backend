@@ -1,4 +1,5 @@
 const UsuarioModel = require('../models/usuario.js');
+const HiloModel = require('../models/hilo.js');
 const bcrypt = require("bcrypt");
 const authConfig = require('../config/auth.js');
 const jwt = require('jsonwebtoken');
@@ -354,6 +355,66 @@ class Usuario {
             }).catch(error => { return { status: 400 } });
 
         if (usuario.status === 200 && antiguoSeguido.status === 200) {
+            await session.commitTransaction();
+            session.endSession();
+        } else {
+            await session.abortTransaction();
+            session.endSession();
+        }
+
+        return usuario;
+    }
+
+    async postGustaDeUnHilo(id_usuario, id_hilo) {
+        const session = await db.startSession();
+        session.startTransaction();
+
+        let hilo = await HiloModel
+            .findByIdAndUpdate(
+                id_hilo,
+                { $addToSet: { likes: id_usuario } },
+                { new: true, session: session }
+            ).then(hilo => {
+                return { status: 200, datos: hilo }
+            }).catch(error => { return { status: 400 } });
+        console.log('hilo', hilo);
+        let usuario = await UsuarioModel
+            .findByIdAndUpdate(
+                id_usuario,
+                {
+                    $addToSet: {
+                        likes: {
+                            _id: id_hilo,
+                            titulo: hilo.datos.titulo,
+                            fecha: hilo.datos.fecha,
+                            usuario: {
+                                _id: hilo.datos.usuario.usuarioId,
+                                nombre: hilo.datos.usuario.nombre,
+                                apellidos: (hilo.datos.usuario.apellidos) ? hilo.datos.usuario.apellidos : null,
+                                foto: (hilo.datos.usuario.foto) ? hilo.datos.usuario.foto : null
+                            }
+                        }
+                    }
+                },
+                { new: true, session: session }
+            ).then(usuario => {
+                console.log('usr', usuario)
+                return {
+                    status: 200,
+                    datos: {
+                        usuario: usuario
+                    }
+                }
+            }).catch(error => {
+                return {
+                    status: 404,
+                    datos: {
+                        error: error.message
+                    }
+                }
+            });
+
+        if (usuario.status === 200 && hilo.status === 200) {
             await session.commitTransaction();
             session.endSession();
         } else {
