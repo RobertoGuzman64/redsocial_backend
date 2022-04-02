@@ -49,6 +49,16 @@ class Usuario {
         });
         return usuario;
     }
+
+    async traePublicacionesQueTiene(id) {
+        let usuario = await UsuarioModel.findById(id).select('publicaciones').then(publicaciones => {
+            return { status: 200, datos: publicaciones };
+        }).catch(error => {
+            return { status: 404, datos: error };
+        });
+        return usuario;
+    }
+
     // Función de buscar un Usuario por nombre, apellidos o correo.
     async buscarUsuario(body) {
         let usuario = await UsuarioModel.findOne(body);

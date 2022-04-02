@@ -99,6 +99,21 @@ router.get("/:id/seguidores", async (req, res) => {
 });
 
 // GET
+// Endpoint de mostrar publicaciones de un Usuario.
+// http://localhost:5500/usuarios/:id/publicaciones
+router.get('/:id/publicaciones', async (req, res) => {
+    try {
+        const id = req.params.id;
+        let respuesta = await UsuarioController.traePublicacionesQueTiene(id);
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+})
+
+// GET
 // Endpoint de mostrar un Usuario por ID.
 // http://localhost:5500/usuarios/:id
 
