@@ -79,7 +79,7 @@
 
   - [x] '/:id' traerPostId
     - [ ] Test
-      - [ ] Test si funciona
+      - [X] Test si funciona
       - [ ] Test de errores
 
 - [ ] POST

@@ -117,8 +117,6 @@ describe('POST endpoint "/"', () => {
 describe('GET endpoint "/"', () => {
     test('MUESTRA todos los hilos de la base de datos y retorna 200', async () => {
         const res = await request(app).get(URLBase);
-        console.log(res.body[0]);
-        console.log(resUsuarioBase)
         expect(res.body).toMatchObject([{
             "__v": 0,
             "_id": resHiloBase.body[0]._id,
@@ -133,8 +131,22 @@ describe('GET endpoint "/"', () => {
     });
 });
 
-// describe('GET endpoint "/:id"', () => {
-// });
+describe('GET endpoint "/:id"', () => {
+    test('MUESTRA un hilo de la base de datos y retorna 200', async () => {
+        const res = await request(app).get(`${URLBase}/${resHiloBase.body[0]._id}`);
+        expect(res.body).toMatchObject({
+            "__v": 0,
+            "_id": resHiloBase.body[0]._id,
+            "comentarios": [],
+            "cuerpo": "Testing",
+            "fecha": "2022-03-03T07:32:37.341Z",
+            "likes": [],
+            "titulo": "Test",
+            "usuarioId": resUsuarioBase.body._id,
+        });
+        expect(res.statusCode).toEqual(200);
+    });
+});
 
 // describe('PATCH endpoint "/:id"', () => {
 // })
