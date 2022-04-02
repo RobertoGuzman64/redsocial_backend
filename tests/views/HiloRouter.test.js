@@ -148,8 +148,23 @@ describe('GET endpoint "/:id"', () => {
     });
 });
 
-// describe('PATCH endpoint "/:id"', () => {
-// })
+describe('PATCH endpoint "/:id"', () => {
+    test('MODIFICA un hilo de la base de datos y retorna 200', async () => {
+        const res = await request(app).patch(`${URLBase}/${resHiloBase.body[0]._id}`)
+            .send({titulo: 'Modificado'});
+        expect(res.body).toMatchObject({
+            "__v": 0,
+            "_id": resHiloBase.body[0]._id,
+            "comentarios": [],
+            "cuerpo": "Testing",
+            "fecha": "2022-03-03T07:32:37.341Z",
+            "likes": [],
+            "titulo": "Modificado",
+            "usuarioId": resUsuarioBase.body._id,
+        });
+        expect(res.statusCode).toEqual(200);
+    });
+})
 
 // describe('DELETE endpoint "/:id"', () => {
 // });

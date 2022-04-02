@@ -96,7 +96,7 @@
 - [ ] PUT/PATCH
   - [x] '/:id' cambiaPost
     - [ ] Test
-      - [ ] Test si funciona
+      - [x] Test si funciona
       - [ ] Test de errores
 
 - [ ] DELETE
