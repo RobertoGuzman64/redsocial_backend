@@ -10,6 +10,8 @@ const cluster = process.env.DB_CLUSTER;
 const url = `mongodb+srv://${usuario}:${clave}@${cluster}.lfcn0.mongodb.net/${database}?retryWrites=true&w=majority`;
 
 const URLBase = '/usuarios';
+const URLHilos = '/hilos';
+
 
 let usuarioBase;
 let otraResConOtroUsuario;
@@ -251,6 +253,74 @@ describe('POST endpoint "/:id/siguiendo"', () => {
     })
 })
 
+describe('POST endpoint "/:id/like/:pk"', () => {
+    test('AÑADE un nuevo hilo a tu lista de hilos que gusta y retorna 200', async () => {
+        let hiloBase = {
+            titulo: 'Test',
+            cuerpo: 'Testing',
+            fecha: '2022-03-03T07:32:37.341Z',
+            usuario: {
+                usuarioId: resBase.body._id,
+                nombre: resBase.body.nombre,
+                apellidos: resBase.body?.apellidos,
+                foto: resBase.body?.foto
+            },
+            comentarios: [],
+            likes: [],
+        };
+        const hilo = await request(app).post(URLHilos).send(hiloBase);
+        const res = await request(app).post(`${URLBase}/${otraResConOtroUsuario.body._id}/like/${hilo.body[0]._id}`);
+        expect(res.body).toMatchObject({
+            usuario: {
+                _id: otraResConOtroUsuario.body._id,
+                nombre: 'Test',
+                edad: '2002-08-17T07:32:37.341Z',
+                correo: 'test2@mail.com',
+                esAdministrador: false,
+                siguiendo: [{
+                    "_id": resBase.body._id,
+                    "apellidos": "Testing",
+                    "foto": "http://blank.page",
+                    "nombre": "Test",
+                },],
+                seguidores: [],
+                publicaciones: [],
+                likes: [{
+                    "_id": hilo.body[0]._id,
+                    "fecha": "2022-03-03T07:32:37.341Z",
+                    "titulo": "Test",
+                    "usuario": {
+                        "_id": resBase.body._id,
+                        "apellidos": "Testing",
+                        "foto": "http://blank.page",
+                        "nombre": "Test",
+                    },
+                }],
+                __v: 0
+            }
+        })
+        expect(res.statusCode).toEqual(200);
+
+        const res2 = await request(app).get(`${URLHilos}/${hilo.body[0]._id}`);
+        expect(res2.body).toMatchObject({
+            usuario: {
+                usuarioId: resBase.body._id,
+                nombre: 'Test',
+                apellidos: 'Testing',
+                foto: 'http://blank.page'
+            },
+            _id: hilo.body[0]._id,
+            titulo: 'Test',
+            cuerpo: 'Testing',
+            fecha: '2022-03-03T07:32:37.341Z',
+            comentarios: [],
+            likes: [otraResConOtroUsuario.body._id],
+            __v: 0
+        });
+        expect(res2.statusCode).toEqual(200);
+    });
+});
+
 describe('GET endpoint "/"', () => {
     test('MUESTRA todos los usuarios de la base de datos y retorna 200', async () => {
         const res = await request(app).get(URLBase)
@@ -263,7 +333,7 @@ describe('GET endpoint "/"', () => {
             "edad": '2002-08-17T07:32:37.341Z',
             "correo": 'test2@mail.com',
             "esAdministrador": false,
-            "likes": [],
+            "likes": [res.body[2].likes[0]],
             "publicaciones": [],
             "seguidores": [],
             "siguiendo": [
@@ -294,7 +364,25 @@ describe('GET endpoint "/:id"', () => {
             "esAdministrador": resBase.body.esAdministrador,
             "foto": usuarioBase.foto,
             "likes": resBase.body.likes,
-            "publicaciones": resBase.body.publicaciones,
+            "publicaciones": [
+                [
+                    {
+                        "__v": 0,
+                        "_id": res.body.publicaciones[0][0]._id,
+                        "comentarios": [],
+                        "cuerpo": "Testing",
+                        "fecha": "2022-03-03T07:32:37.341Z",
+                        "likes": [],
+                        "titulo": "Test",
+                        "usuario": {
+                            "apellidos": "Testing",
+                            "foto": "http://blank.page",
+                            "nombre": "Test",
+                            "usuarioId": resBase.body._id,
+                        },
+                    },
+                ],
+            ],
             "seguidores": [
                 {
                     "_id": otraResConOtroUsuario.body._id,
@@ -363,20 +451,6 @@ describe('GET endpoint "/:id/seguidores"', () => {
 
 describe('GET endpoint "/:id/publicaciones"', () => {
     test('MUESTRA los posts del usuario con el id pasado y retorna 200', async () => {
-        let hiloBase = {
-            titulo: 'Test',
-            cuerpo: 'Testing',
-            fecha: '2022-03-03T07:32:37.341Z',
-            usuario: {
-                usuarioId: resBase.body._id,
-                nombre: resBase.body.nombre,
-                apellidos: resBase.body?.apellidos,
-                foto: resBase.body?.foto
-            },
-            comentarios: [],
-            likes: [],
-        };
-        await request(app).post(`/hilos`).send(hiloBase);
         const res = await request(app).get(`${URLBase}/${resBase.body._id}/publicaciones`);
         expect(res.body).toMatchObject({
             "_id": resBase.body._id,
@@ -540,7 +614,7 @@ describe('DELETE endpoint "/:id/siguiendo/:pk"', () => {
                 siguiendo: [],
                 seguidores: [],
                 publicaciones: [],
-                likes: [],
+                likes: [res.body.usuario.likes[0]],
                 __v: 0
             }
         })
