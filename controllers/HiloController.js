@@ -71,7 +71,7 @@ class Hilo {
             return {
                 status: 200,
                 datos: {
-                    hilo: `Hilo con el correo ${hiloBorrado.correo} ha sido eliminado`
+                    hilo: `Hilo con el titulo ${hiloBorrado.titulo} ha sido borrado con suceso`
                 }
             }
         }).catch(error => {
