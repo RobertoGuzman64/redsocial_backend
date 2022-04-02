@@ -57,7 +57,7 @@ class Hilo {
 
     // Función de actualizar un Hilo.
     async cambiaHilo(id, body) {
-        let hiloActualizado = await HiloModel.findByIdAndUpdate(id, body).then(hiloActualizado => {
+        let hiloActualizado = await HiloModel.findByIdAndUpdate(id, body, {new: true}).then(hiloActualizado => {
             return { status: 200, datos: hiloActualizado }
         }).catch(error => {
             return { status: 400, datos: { error: error.message } }
