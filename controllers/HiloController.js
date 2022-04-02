@@ -19,8 +19,7 @@ class Hilo {
         }).catch(error => {
             return { status: 400, datos: { error: error.message } }
         });
-        
-        let duenoDelHilo = await UsuarioModel.findByIdAndUpdate(body.usuarioId, { $push: { publicaciones: hiloNuevo.datos } }, { new: true, session: session }).then(dueno => {
+        let duenoDelHilo = await UsuarioModel.findByIdAndUpdate(body.usuario.usuarioId, { $push: { publicaciones: hiloNuevo.datos } }, { new: true, session: session }).then(dueno => {
             return { status: 200, usuario: dueno }
         }).catch(error => {
             return { status: 400 }
