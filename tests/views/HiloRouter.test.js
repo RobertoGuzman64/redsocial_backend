@@ -28,6 +28,7 @@ beforeAll((done) => {
             apellidos: 'Testing Hilo',
             edad: '2002-08-17T07:32:37.341Z',
             correo: 'testHilo@mail.com',
+            foto: 'https://blank.page',
             clave: '1234',
         };
         resUsuarioBase = await request(app)
@@ -37,7 +38,12 @@ beforeAll((done) => {
             titulo: 'Test',
             cuerpo: 'Testing',
             fecha: '2022-03-03T07:32:37.341Z',
-            usuarioId: resUsuarioBase.body._id,
+            usuario: {
+                usuarioId: resUsuarioBase.body._id,
+                nombre: resUsuarioBase.body.nombre,
+                apellidos: resUsuarioBase.body.apellidos,
+                foto: resUsuarioBase.body.foto,
+            },
             comentarios: [],
             likes: [],
         };
@@ -69,7 +75,6 @@ describe('POST endpoint "/"', () => {
         }
     */
     test("CREA hilo con todos los campos rellenados, chequea si el usuario que ha creado el hilo tiene el hilo en el perfil y retorna 201", async () => {
-
         expect(resHiloBase.body).toMatchObject([{
             "__v": 0,
             "_id": resHiloBase.body[0]._id,
@@ -78,8 +83,13 @@ describe('POST endpoint "/"', () => {
             "fecha": "2022-03-03T07:32:37.341Z",
             "likes": [],
             "titulo": "Test",
-            "usuarioId": resUsuarioBase.body._id,
-        }])
+            usuario: {
+                usuarioId: resUsuarioBase.body._id,
+                nombre: 'Test Hilo',
+                apellidos: 'Testing Hilo',
+                foto: 'https://blank.page'
+            },
+        }]);
         expect(resHiloBase.statusCode).toEqual(201);
 
         const res = await request(app).get(`${URLUsuarios}/${resUsuarioBase.body._id}`);
@@ -101,7 +111,12 @@ describe('POST endpoint "/"', () => {
                 "fecha": "2022-03-03T07:32:37.341Z",
                 "likes": [],
                 "titulo": "Test",
-                "usuarioId": resUsuarioBase.body._id,
+                usuario: {
+                    usuarioId: resUsuarioBase.body._id,
+                    nombre: 'Test Hilo',
+                    apellidos: 'Testing Hilo',
+                    foto: 'https://blank.page'
+                },
             },]],
             likes: []
         });
@@ -125,7 +140,12 @@ describe('GET endpoint "/"', () => {
             "fecha": "2022-03-03T07:32:37.341Z",
             "likes": [],
             "titulo": "Test",
-            "usuarioId": resUsuarioBase.body._id,
+            usuario: {
+                usuarioId: resUsuarioBase.body._id,
+                nombre: 'Test Hilo',
+                apellidos: 'Testing Hilo',
+                foto: 'https://blank.page'
+            },
         }]);
         expect(res.statusCode).toEqual(200);
     });
@@ -142,7 +162,12 @@ describe('GET endpoint "/:id"', () => {
             "fecha": "2022-03-03T07:32:37.341Z",
             "likes": [],
             "titulo": "Test",
-            "usuarioId": resUsuarioBase.body._id,
+            usuario: {
+                usuarioId: resUsuarioBase.body._id,
+                nombre: 'Test Hilo',
+                apellidos: 'Testing Hilo',
+                foto: 'https://blank.page'
+            },
         });
         expect(res.statusCode).toEqual(200);
     });
@@ -160,7 +185,12 @@ describe('PATCH endpoint "/:id"', () => {
             "fecha": "2022-03-03T07:32:37.341Z",
             "likes": [],
             "titulo": "Modificado",
-            "usuarioId": resUsuarioBase.body._id,
+            usuario: {
+                usuarioId: resUsuarioBase.body._id,
+                nombre: 'Test Hilo',
+                apellidos: 'Testing Hilo',
+                foto: 'https://blank.page'
+            },
         });
         expect(res.statusCode).toEqual(200);
     });

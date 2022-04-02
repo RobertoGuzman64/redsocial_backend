@@ -367,7 +367,12 @@ describe('GET endpoint "/:id/publicaciones"', () => {
             titulo: 'Test',
             cuerpo: 'Testing',
             fecha: '2022-03-03T07:32:37.341Z',
-            usuarioId: resBase.body._id,
+            usuario: {
+                usuarioId: resBase.body._id,
+                nombre: resBase.body.nombre,
+                apellidos: resBase.body?.apellidos,
+                foto: resBase.body?.foto
+            },
             comentarios: [],
             likes: [],
         };
@@ -384,7 +389,12 @@ describe('GET endpoint "/:id/publicaciones"', () => {
                     "fecha": "2022-03-03T07:32:37.341Z",
                     "likes": [],
                     "titulo": "Test",
-                    "usuarioId": resBase.body._id,
+                    usuario: {
+                        usuarioId: resBase.body._id,
+                        nombre: resBase.body.nombre,
+                        apellidos: resBase.body?.apellidos,
+                        foto: resBase.body?.foto
+                    },
                 },]
             ],
         })
