@@ -11,7 +11,7 @@
     "type": "git",
     "url": "https://github.com/luigiMinardi/"
   },
-  "author": "Luigi Minardi, Callum Gordon, Roberto Guzmán, Teresa Carrasco",
+  "author": "Luigi Minardi, Callum Gordon, Roberto Guzmán",
   "license": "MIT",
   "jest": {
     "testEnvironment": "node",

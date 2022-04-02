@@ -102,7 +102,7 @@
 - [ ] DELETE
   - [x] '/:id' borrarPostId
     - [ ] Test
-      - [ ] Test si funciona
+      - [x] Test si funciona
       - [ ] Test de errores
 
 ## Extra Endpoints
