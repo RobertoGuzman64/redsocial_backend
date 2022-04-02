@@ -113,8 +113,10 @@
     - [ ] Test
 
 - [ ] GET
-  - [ ] '/:id/posts' traerPostsDeUnUsuario
+  - [x] '/:id/posts' traerPostsDeUnUsuario
     - [ ] Test
+      - [x] Test si funciona
+      - [ ] Test de errores 
 
 - [ ] GET
   - [ ] '/:id/likes' traerLikesDeUnUsuario

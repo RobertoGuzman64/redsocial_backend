@@ -361,6 +361,37 @@ describe('GET endpoint "/:id/seguidores"', () => {
     // });
 });
 
+describe('GET endpoint "/:id/publicaciones"', () => {
+    test('MUESTRA los posts del usuario con el id pasado y retorna 200', async () => {
+        let hiloBase = {
+            titulo: 'Test',
+            cuerpo: 'Testing',
+            fecha: '2022-03-03T07:32:37.341Z',
+            usuarioId: resBase.body._id,
+            comentarios: [],
+            likes: [],
+        };
+        await request(app).post(`/hilos`).send(hiloBase);
+        const res = await request(app).get(`${URLBase}/${resBase.body._id}/publicaciones`);
+        expect(res.body).toMatchObject({
+            "_id": resBase.body._id,
+            "publicaciones": [
+                [{
+                    "__v": 0,
+                    "_id": res.body.publicaciones[0][0]._id,
+                    "comentarios": [],
+                    "cuerpo": "Testing",
+                    "fecha": "2022-03-03T07:32:37.341Z",
+                    "likes": [],
+                    "titulo": "Test",
+                    "usuarioId": resBase.body._id,
+                },]
+            ],
+        })
+        expect(res.statusCode).toEqual(200);
+    })
+})
+
 describe('PATCH endpoint "/:id"', () => {
     test('CAMBIA los datos del usuario con el id pasado y retorna 200', async () => {
         let datos = {
