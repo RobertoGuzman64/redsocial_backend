@@ -74,7 +74,7 @@
 - [ ] GET
   - [x] '/' traerPosts
     - [ ] Test
-      - [ ] Test si funciona
+      - [x] Test si funciona
       - [ ] Test de errores
 
   - [x] '/:id' traerPostId
