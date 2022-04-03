@@ -228,4 +228,20 @@ router.delete("/:id/siguiendo/:pk", async (req, res) => {
     }
 });
 
+// DELETE
+// Endpoint de quitar el like de un hilo
+// http://localhost:5500/usuarios/:id/like/:pk
+router.delete("/:id/like/:pk", async (req, res) => {
+    try {
+        const usuario = req.params.id;
+        const hilo = req.params.pk;
+        let respuesta = await UsuarioController.deleteLikeDeUnHilo(usuario, hilo);
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
 module.exports = router;

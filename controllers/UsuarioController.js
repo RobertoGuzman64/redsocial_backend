@@ -422,6 +422,56 @@ class Usuario {
 
         return usuario;
     }
+
+    async deleteLikeDeUnHilo(id_usuario, id_hilo) {
+        const session = await db.startSession();
+        session.startTransaction();
+
+        let hilo = await HiloModel
+            .findByIdAndUpdate(
+                id_hilo,
+                { $pull: { likes: id_usuario } },
+                { new: true, session: session }
+            ).then(hilo => {
+                return { status: 200, datos: hilo }
+            }).catch(error => { return { status: 400 } });
+        let usuario = await UsuarioModel
+            .findByIdAndUpdate(
+                id_usuario,
+                {
+                    $pull: {
+                        likes: {
+                            _id: id_hilo
+                        }
+                    }
+                },
+                { new: true, session: session }
+            ).then(usuario => {
+                return {
+                    status: 200,
+                    datos: {
+                        usuario: usuario
+                    }
+                }
+            }).catch(error => {
+                return {
+                    status: 404,
+                    datos: {
+                        error: error.message
+                    }
+                }
+            });
+
+        if (usuario.status === 200 && hilo.status === 200) {
+            await session.commitTransaction();
+            session.endSession();
+        } else {
+            await session.abortTransaction();
+            session.endSession();
+        }
+
+        return usuario;
+    }
 }
 
 
