@@ -49,6 +49,21 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// GET
+// Endpoint de mostrar los likes de un Hilo por ID.
+// http://localhost:5500/hilos/:id/likes
+router.get('/:id/likes', async (req, res) => {
+    try {
+        let id = req.params.id
+        let respuesta = await HiloController.getLikesDeHilo(id);
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+})
+
 // PATCH
 // Endpoint de Modificar el Hilo por ID.
 // http://localhost:5500/hilos/:id

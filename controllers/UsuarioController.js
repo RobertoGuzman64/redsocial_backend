@@ -377,7 +377,6 @@ class Usuario {
             ).then(hilo => {
                 return { status: 200, datos: hilo }
             }).catch(error => { return { status: 400 } });
-        console.log('hilo', hilo);
         let usuario = await UsuarioModel
             .findByIdAndUpdate(
                 id_usuario,
@@ -398,7 +397,6 @@ class Usuario {
                 },
                 { new: true, session: session }
             ).then(usuario => {
-                console.log('usr', usuario)
                 return {
                     status: 200,
                     datos: {

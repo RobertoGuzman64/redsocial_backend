@@ -54,6 +54,15 @@ class Hilo {
         return hiloEncontrado;
     }
 
+    async getLikesDeHilo(id) {
+        let hiloEncontrado = await HiloModel.findById(id).select('likes').then(hilo => {
+            return { status: 200, datos: hilo }
+        }).catch(error => {
+            return { status: 404, datos: { error: error.message } }
+        });
+        return hiloEncontrado;
+    }
+
     // Función de actualizar un Hilo.
     async cambiaHilo(id, body) {
         let hiloActualizado = await HiloModel.findByIdAndUpdate(id, body, {new: true}).then(hiloActualizado => {
