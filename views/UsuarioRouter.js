@@ -162,6 +162,21 @@ router.get("/busqueda", async (req, res) => {
     }
 });
 
+// GET
+// Endpoint de buscar los likes de un Usuario.
+// http://localhost:5500/usuarios/:id/likes
+router.get('/:id/likes', async (req, res) => {
+    try {
+        const id = req.params.id;
+        let respuesta = await UsuarioController.getLikesDelUsuario(id);
+        res.status(respuesta.status).json(respuesta.datos);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+});
+
 // PATCH
 // Endpoint de Modificar el perfil por ID.
 // http://localhost:5500/usuarios/:id

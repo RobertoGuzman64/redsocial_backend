@@ -423,6 +423,26 @@ class Usuario {
         return usuario;
     }
 
+    async getLikesDelUsuario(id_usuario) {
+        let usuario = await UsuarioModel.findById(id_usuario).select('likes').then(usuario => {
+            return {
+                status: 200,
+                datos: {
+                    usuario: usuario
+                }
+            }
+        }).catch(error => {
+            return {
+                status: 404,
+                datos: {
+                    error: error.message
+                }
+            }
+        });
+
+        return usuario;
+    }
+
     async deleteLikeDeUnHilo(id_usuario, id_hilo) {
         const session = await db.startSession();
         session.startTransaction();
