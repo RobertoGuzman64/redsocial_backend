@@ -1,4 +1,5 @@
-<div align="center">
+# Tecnologías utilizadas en el proyecto:
+<div align=center>
     <a href="https://github.com/luigiMinardi/redsocial_backend/blob/884980cce6398b32e8976d5da082224e5edd8942/LICENSE">
         <img alt="GitHub license" src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge">
     </a>
@@ -83,14 +84,7 @@ El objetivo de este proyecto es enlazar con el cliente front-end de nuestro proy
 
 -----------------------------------------------
 
-![Test Coverage endpoints](imgReadme/Test-endpoints.jpg)
 
-
-..Pruebas de endpoints
-
-
-
-------------------------------------------------
 
 
 ### EndPoints de Usuarios :
@@ -185,17 +179,19 @@ El objetivo de este proyecto es enlazar con el cliente front-end de nuestro proy
     router.delete("/:id/like/:pk", UsuarioController.deleteLikeDeUnHilo(usuario, hilo))
 
 
-## Tecnologías utilizadas en el proyecto:
+--------------------------------
 
-* **Nodejs**
-* **MongoDB**
-* **Mongoose**
-  
+## cobertura de tests de los endpoints:
+
+![Test Coverage endpoints](imgReadme/Test-endpoints.jpg)
 
 
------------------------------------
+------------------------------------------------
 
-por Luigi Minardi y Roberto Guzmán
+
+
+
+por Luigi Minardi, Roberto Guzmán y Callum Gordon
 
 
 
