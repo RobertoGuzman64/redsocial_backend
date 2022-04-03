@@ -76,6 +76,7 @@
         - [ ] Test de errores
 
 ### Hilo
+
 - [ ] GET
   - [x] '/' traerPosts
     - [ ] Test
@@ -86,6 +87,12 @@
     - [ ] Test
       - [X] Test si funciona
       - [ ] Test de errores
+
+  - [x] '/:id/like' traerLikesDeUnPostId
+    - [ ] Test
+      - [x] Test si funciona
+      - [ ] Test de errores
+   
 
 - [ ] POST
   - [x] '/' crearPost
@@ -121,6 +128,12 @@
 - [ ] GET
   - [ ] '/:id/likes' traerLikesDeUnUsuario
     - [ ] Test
+
+- [ ] DELETE
+    - [ ] '/:id/like/pk' quitaElLikeDelPost
+      - [ ] Test
+        - [ ] Test si funciona
+        - [ ] Test de errores 
 
 ### Hilo
 

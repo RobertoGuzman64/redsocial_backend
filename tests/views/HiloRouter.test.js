@@ -173,6 +173,20 @@ describe('GET endpoint "/:id"', () => {
     });
 });
 
+describe('GET endpoint "/:id/likes"', () => {
+    test('MUESTRA los likes de un hilo de la base de datos y retorna 200', async () => {
+        await request(app).post(`${URLUsuarios}/${resUsuarioBase.body._id}/like/${resHiloBase.body[0]._id}`);
+        const res = await request(app).get(`${URLBase}/${resHiloBase.body[0]._id}/likes`);
+        expect(res.body).toMatchObject({
+            "_id": resHiloBase.body[0]._id,
+            "likes": [
+                resUsuarioBase.body._id,
+            ],
+        });
+        expect(res.statusCode).toEqual(200);
+    });
+})
+
 describe('PATCH endpoint "/:id"', () => {
     test('MODIFICA un hilo de la base de datos y retorna 200', async () => {
         const res = await request(app).patch(`${URLBase}/${resHiloBase.body[0]._id}`)
@@ -183,7 +197,9 @@ describe('PATCH endpoint "/:id"', () => {
             "comentarios": [],
             "cuerpo": "Testing",
             "fecha": "2022-03-03T07:32:37.341Z",
-            "likes": [],
+            "likes": [
+                resUsuarioBase.body._id,
+            ],
             "titulo": "Modificado",
             usuario: {
                 usuarioId: resUsuarioBase.body._id,
