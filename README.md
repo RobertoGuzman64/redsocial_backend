@@ -181,9 +181,9 @@ El objetivo de este proyecto es enlazar con el cliente front-end de nuestro proy
 
 --------------------------------
 
-## cobertura de tests de los endpoints:
-
-![Test Coverage endpoints](imgReadme/Test-endpoints.jpg)
+## Cobertura de tests de los endpoints:
+https://luigiminardi.github.io/redsocial_backend/
+[![Test Coverage endpoints](imgReadme/Test-endpoints.jpg)](https://luigiminardi.github.io/redsocial_backend/)
 
 
 ------------------------------------------------
@@ -197,5 +197,5 @@ por Luigi Minardi, Roberto Guzmán y Callum Gordon
 
 
 ---------------------
-## Repositorio del Backend: (https://github.com/luigiMinardi/redsocial_backend.git)<br>
+## Repositorio del Backend: https://github.com/luigiMinardi/redsocial_backend.git
 
