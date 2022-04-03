@@ -81,9 +81,17 @@ El objetivo de este proyecto es enlazar con el cliente front-end de nuestro proy
 
 <br>
 
-***
-![Pagina de Amigos React](src/img-readme/amigos.jpg)
-Pagin
+-----------------------------------------------
+
+![Test Coverage endpoints](imgReadme/Test-endpoints.jpg)
+
+
+..Pruebas de endpoints
+
+
+
+------------------------------------------------
+
 
 ### EndPoints de Usuarios :
 
