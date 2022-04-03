@@ -126,8 +126,10 @@
       - [ ] Test de errores 
 
 - [ ] GET
-  - [ ] '/:id/likes' traerLikesDeUnUsuario
+  - [x] '/:id/likes' traerLikesDeUnUsuario
     - [ ] Test
+        - [x] Test si funciona
+        - [ ] Test de errores 
 
 - [ ] DELETE
     - [x] '/:id/like/pk' quitaElLikeDelPost

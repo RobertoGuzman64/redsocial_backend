@@ -493,6 +493,31 @@ describe('GET endpoint "/:id/publicaciones"', () => {
     })
 })
 
+describe('GET endpoint "/:id/likes"', () => {
+    test('MUESTRA los likes del usuario con el id pasado y retorna 200', async () => {
+        const res = await request(app).get(`${URLBase}/${otraResConOtroUsuario.body._id}/likes`);
+        expect(res.body).toMatchObject({
+            usuario: {
+                "_id": otraResConOtroUsuario.body._id,
+                "likes": [
+                    {
+                        "_id": resHiloBase.body[0]._id,
+                        "fecha": "2022-03-03T07:32:37.341Z",
+                        "titulo": "Test",
+                        "usuario": {
+                            "_id": resBase.body._id,
+                            "apellidos": "Testing",
+                            "foto": "http://blank.page",
+                            "nombre": "Test",
+                        },
+                    },
+                ],
+            }
+        })
+        expect(res.statusCode).toEqual(200);
+    })
+})
+
 describe('PATCH endpoint "/:id"', () => {
     test('CAMBIA los datos del usuario con el id pasado y retorna 200', async () => {
         let datos = {
