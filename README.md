@@ -130,9 +130,9 @@
     - [ ] Test
 
 - [ ] DELETE
-    - [ ] '/:id/like/pk' quitaElLikeDelPost
+    - [x] '/:id/like/pk' quitaElLikeDelPost
       - [ ] Test
-        - [ ] Test si funciona
+        - [x] Test si funciona
         - [ ] Test de errores 
 
 ### Hilo

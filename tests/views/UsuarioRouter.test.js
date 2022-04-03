@@ -15,7 +15,10 @@ const URLHilos = '/hilos';
 
 let usuarioBase;
 let otraResConOtroUsuario;
+let hiloBase;
+
 let resBase;
+let resHiloBase;
 
 beforeAll((done) => {
     mongoose.connect(url, {
@@ -35,6 +38,20 @@ beforeAll((done) => {
         resBase = await request(app)
             .post(URLBase)
             .send(usuarioBase);
+        hiloBase = {
+            titulo: 'Test',
+            cuerpo: 'Testing',
+            fecha: '2022-03-03T07:32:37.341Z',
+            usuario: {
+                usuarioId: resBase.body._id,
+                nombre: resBase.body.nombre,
+                apellidos: resBase.body?.apellidos,
+                foto: resBase.body?.foto
+            },
+            comentarios: [],
+            likes: [],
+        };
+        resHiloBase = await request(app).post(URLHilos).send(hiloBase);
         done();
     });
 });
@@ -133,13 +150,13 @@ describe('POST endpoint "/"', () => {
     });
 
     // test("NO crea usuario porque ya existe un usuario con ese correo y retorna 400", async () => {
-        // TODO: Preguntar porque ese test falla
-        // ! en insomnia va bien, si comenta el models/hilo va bien, si comenta en controllers/HiloController va bien
-        // await request(app).post(URLBase).send(usuarioBase);
-        // const res = await request(app).post(URLBase).send(usuarioBase);
-        // let res2 = await request(app).get(URLBase)
-        // console.log(res2.body)
-        // expect(res.body).toMatchObject({ "error": "E11000 duplicate key error collection: testing.usuarios index: correo_1 dup key: { correo: \"test@mail.com\" }" })
+    // TODO: Preguntar porque ese test falla
+    // ! en insomnia va bien, si comenta el models/hilo va bien, si comenta en controllers/HiloController va bien
+    // await request(app).post(URLBase).send(usuarioBase);
+    // const res = await request(app).post(URLBase).send(usuarioBase);
+    // let res2 = await request(app).get(URLBase)
+    // console.log(res2.body)
+    // expect(res.body).toMatchObject({ "error": "E11000 duplicate key error collection: testing.usuarios index: correo_1 dup key: { correo: \"test@mail.com\" }" })
     // });
 });
 
@@ -166,7 +183,25 @@ describe('POST endpoint "/login"', () => {
             esAdministrador: false,
             siguiendo: [],
             seguidores: [],
-            publicaciones: [],
+            publicaciones: [
+                [
+                    {
+                        "__v": 0,
+                        "_id": resHiloBase.body[0]._id,
+                        "comentarios": [],
+                        "cuerpo": "Testing",
+                        "fecha": "2022-03-03T07:32:37.341Z",
+                        "likes": [],
+                        "titulo": "Test",
+                        "usuario": {
+                            "apellidos": "Testing",
+                            "foto": "http://blank.page",
+                            "nombre": "Test",
+                            "usuarioId": res.body.usuario._id,
+                        },
+                    },
+                ],
+            ],
             likes: [],
         });
         expect(res.body).toHaveProperty('token')
@@ -251,21 +286,7 @@ describe('POST endpoint "/:id/siguiendo"', () => {
 
 describe('POST endpoint "/:id/like/:pk"', () => {
     test('AÑADE un nuevo hilo a tu lista de hilos que gusta y retorna 200', async () => {
-        let hiloBase = {
-            titulo: 'Test',
-            cuerpo: 'Testing',
-            fecha: '2022-03-03T07:32:37.341Z',
-            usuario: {
-                usuarioId: resBase.body._id,
-                nombre: resBase.body.nombre,
-                apellidos: resBase.body?.apellidos,
-                foto: resBase.body?.foto
-            },
-            comentarios: [],
-            likes: [],
-        };
-        const hilo = await request(app).post(URLHilos).send(hiloBase);
-        const res = await request(app).post(`${URLBase}/${otraResConOtroUsuario.body._id}/like/${hilo.body[0]._id}`);
+        const res = await request(app).post(`${URLBase}/${otraResConOtroUsuario.body._id}/like/${resHiloBase.body[0]._id}`);
         expect(res.body).toMatchObject({
             usuario: {
                 _id: otraResConOtroUsuario.body._id,
@@ -282,7 +303,7 @@ describe('POST endpoint "/:id/like/:pk"', () => {
                 seguidores: [],
                 publicaciones: [],
                 likes: [{
-                    "_id": hilo.body[0]._id,
+                    "_id": resHiloBase.body[0]._id,
                     "fecha": "2022-03-03T07:32:37.341Z",
                     "titulo": "Test",
                     "usuario": {
@@ -297,7 +318,7 @@ describe('POST endpoint "/:id/like/:pk"', () => {
         })
         expect(res.statusCode).toEqual(200);
 
-        const res2 = await request(app).get(`${URLHilos}/${hilo.body[0]._id}`);
+        const res2 = await request(app).get(`${URLHilos}/${resHiloBase.body[0]._id}`);
         expect(res2.body).toMatchObject({
             usuario: {
                 usuarioId: resBase.body._id,
@@ -305,7 +326,7 @@ describe('POST endpoint "/:id/like/:pk"', () => {
                 apellidos: 'Testing',
                 foto: 'http://blank.page'
             },
-            _id: hilo.body[0]._id,
+            _id: resHiloBase.body[0]._id,
             titulo: 'Test',
             cuerpo: 'Testing',
             fecha: '2022-03-03T07:32:37.341Z',
@@ -651,6 +672,40 @@ describe('DELETE endpoint "/:id/siguiendo/:pk"', () => {
         expect(res.statusCode).toEqual(404);
     });
 });
+
+describe('DELETE endpoint "/:id/like/:pk"', () => {
+    test('BORRA de la lista de likes el usuario que el usuario del id pasado ha pasado en el segundo param y retorna 200', async () => {
+        const res = await request(app).delete(`${URLBase}/${otraResConOtroUsuario.body._id}/like/${resBase.body._id}`)
+        expect(res.body).toMatchObject({
+            usuario: {
+                _id: otraResConOtroUsuario.body._id,
+                nombre: 'Test',
+                edad: '2002-08-17T07:32:37.341Z',
+                correo: "test2@mail.com",
+            }
+        });
+        expect(res.statusCode).toEqual(200);
+
+        const res2 = await request(app).get(`${URLHilos}/${resHiloBase.body[0]._id}`);
+        expect(res2.body).toMatchObject({
+            usuario: {
+                usuarioId: resBase.body._id,
+                nombre: 'Test',
+                apellidos: 'Testing',
+                foto: 'http://blank.page'
+            },
+            _id: resHiloBase.body[0]._id,
+            titulo: 'Test',
+            cuerpo: 'Testing',
+            fecha: '2022-03-03T07:32:37.341Z',
+            comentarios: [],
+            likes: [otraResConOtroUsuario.body._id],
+            __v: 0
+        });
+        expect(res2.statusCode).toEqual(200);
+    });
+})
+
 
 describe('DELETE endpoint "/:id"', () => {
     test('BORRA el usuario del id pasado y retorna 200', async () => {

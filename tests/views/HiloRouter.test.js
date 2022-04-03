@@ -132,7 +132,7 @@ describe('POST endpoint "/"', () => {
 describe('GET endpoint "/"', () => {
     test('MUESTRA todos los hilos de la base de datos y retorna 200', async () => {
         const res = await request(app).get(URLBase);
-        expect(res.body).toMatchObject([{
+        expect(res.body).toHaveProperty('[][0]', {
             "__v": 0,
             "_id": resHiloBase.body[0]._id,
             "comentarios": [],
@@ -146,7 +146,7 @@ describe('GET endpoint "/"', () => {
                 apellidos: 'Testing Hilo',
                 foto: 'https://blank.page'
             },
-        }]);
+        });
         expect(res.statusCode).toEqual(200);
     });
 });
